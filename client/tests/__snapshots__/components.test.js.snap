@@ -1,0 +1,10 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LoginProfile > should render the component correctly 1`] = `
+"<div class="p-menuitem">
+  <!-- If no token present, show login button -->
+  <div class="p-menuitem-content"><a class="p-menuitem-link"><span class="p-menuitem-icon pi pi-sign-in"></span><span class="p-menuitem-text">Login</span></a></div>
+</div>"
+`;
+
+exports[`MyComponent > renders the component correctly 1`] = `"<menubar-stub model="[object Object]"></menubar-stub>"`;

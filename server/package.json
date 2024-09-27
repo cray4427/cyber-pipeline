@@ -45,6 +45,7 @@
     "mocha": "^10.7.3",
     "prettier": "^3.3.3",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "vitest": "^2.1.1"
   }
 }

@@ -17,7 +17,7 @@ export default mergeConfig(
         },
       },
       fileParallelism: false,
-      setupFiles: './tests/setupTests.js', // Path to your setup file
+      setupFiles: './__tests__/setupTests.js', // Path to your setup file
     }
   })
 )

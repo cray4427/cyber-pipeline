@@ -1,11 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { vi } from 'vitest'
-// Mock PrimeVue components
-import FloatLabel from 'primevue/floatlabel'
-import IconField from 'primevue/iconfield'
-import InputIcon from 'primevue/inputicon'
-import AutoComplete from 'primevue/autocomplete'
 
 // Import the component to test
 import CohortDashboard from '@/components/cohort/CohortDashboard.vue'

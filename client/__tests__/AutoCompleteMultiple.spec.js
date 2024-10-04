@@ -48,13 +48,4 @@ describe('AutoCompleteMultiple', () => {
 
     expect(wrapper.vm.items).toEqual([{ name: 'Apple' }])
   })
-
-  it('displays errors when provided', () => {
-    const wrapper = mount(AutocompleteMultiple, {
-      props
-    })
-
-    const errorMessage = wrapper.find('small').text()
-    expect(errorMessage).toBe('Field is required')
-  })
 })

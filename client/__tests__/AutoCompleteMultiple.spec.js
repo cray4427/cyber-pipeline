@@ -9,7 +9,7 @@ import AutoComplete from 'primevue/autocomplete'
 // Import the component to test
 import AutocompleteMultiple from '@/components/forms/AutocompleteMultiple.vue'
 
-describe('YourComponent.vue', () => {
+describe('AutoCompleteMultiple', () => {
   const props = {
     field: 'testField',
     label: 'Test Label',
@@ -21,6 +21,7 @@ describe('YourComponent.vue', () => {
     ],
     valueLabel: 'name',
     disabled: false,
+    modelValue: [],
     errors: {
       testField: [{ message: 'Field is required' }]
     }
@@ -28,14 +29,6 @@ describe('YourComponent.vue', () => {
 
   it('renders correctly with provided props', () => {
     const wrapper = mount(AutocompleteMultiple, {
-      global: {
-        components: {
-          FloatLabel,
-          IconField,
-          InputIcon,
-          AutoComplete
-        }
-      },
       props
     })
 
@@ -45,14 +38,6 @@ describe('YourComponent.vue', () => {
 
   it('filters autocomplete values based on search query', async () => {
     const wrapper = mount(AutocompleteMultiple, {
-      global: {
-        components: {
-          FloatLabel,
-          IconField,
-          InputIcon,
-          AutoComplete
-        }
-      },
       props
     })
 
@@ -66,14 +51,6 @@ describe('YourComponent.vue', () => {
 
   it('displays errors when provided', () => {
     const wrapper = mount(AutocompleteMultiple, {
-      global: {
-        components: {
-          FloatLabel,
-          IconField,
-          InputIcon,
-          AutoComplete
-        }
-      },
       props
     })
 

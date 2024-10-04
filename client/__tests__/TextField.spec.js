@@ -1,11 +1,9 @@
-import { render, fireEvent } from '@testing-library/vue'
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import TextField from '../src/components/forms/TextField.vue'
-import InputText from 'primevue/inputtext'
 
 describe ('TextField', () => {
-    
+
     const props = {
         field: 'testField',
         label: 'Test Field',

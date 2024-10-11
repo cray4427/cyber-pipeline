@@ -90,7 +90,10 @@ describe('TeacherList', () => {
 
     it('opens edit teacher dialog', async () => {
         const teacher = { id: 1, name: 'John Doe' };
-        wrapper.vm.editTeacher(teacher);
+        const spy = vi.spyOn(wrapper.vm, 'editTeacher');
+        await wrapper.vm.editTeacher(teacher);
+
+        expect(spy).toHaveBeenCalledWith(teacher);
         expect(wrapper.vm.teacherDialog).toBe(true);
         expect(wrapper.vm.teacherDialogHeader).toBe('Edit Teacher');
         expect(wrapper.vm.teacher).toEqual(teacher);

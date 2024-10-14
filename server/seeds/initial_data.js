@@ -413,6 +413,23 @@ export async function seed (knex) {
       created_by: 'test-admin',
       updated_by: 'test-admin',
     },
+    {
+      id: 3,
+      name: 'Nathan Bean',
+      email: 'nhbean@k-state.edu',
+      eid: 'nhbean',
+      wid: '987654321',
+      status: 1,
+      pd_status: 1,
+      cert_status: 1,
+      ms_status: 1,
+      grade_level: 'elementary school K-5',
+      notes: 'Update grade level',
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    },
   ])
 
   // Teacher Districts
@@ -448,6 +465,16 @@ export async function seed (knex) {
       created_by: 'test-admin',
       updated_by: 'test-admin',
     },
+    {
+      teacher_id: '3',
+      district_id: '3',
+      notes: 'Teacher 3 in District 3',
+      primary: true,
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    }
   ])
 
   // Cohocrts

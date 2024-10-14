@@ -28,6 +28,9 @@
       <header class="mb-2">
         <h1 class="p-title">Kansas State University: Cyber Pipeline Program</h1>
         <p class="p-text-secondary">Making quality computer science education available to all high school students at little or no cost.</p>
+        <div v-if="svgUrl">
+          <iframe :src="svgUrl" frameborder="0"></iframe>
+        </div>
       </header>
       <section v-if="activeTab === 'curriculum'" class="p-section">
         <h2 class="p-subtitle">Curriculum</h2>
@@ -57,13 +60,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const activeTab = ref('curriculum');
 
 function setActiveTab(tab) {
   activeTab.value = tab;
 }
+
+const districts = ref('');
+const svgUrl = ref('');
+
+const getDistrictList = async () => {
+  try{
+    const response = await fetch('/api/vi/districts')
+    if(!response.ok) {
+      throw new Error('Failed to fetch district list')
+    }
+    const data = await response.json()
+    const usdList = data.map(district => district.usd)
+    districts.value = usdList.join(',')
+    svgUrl.value = 'https://k12map.cs.ksu.edu/Map?districts=${districts.value}'
+  } catch(error) {
+    throw new Error('Failed to fetch district list')
+  }
+}
+
+onMounted(() => {
+  getDistrictList()
+})
+
 </script>
 
 <style scoped>

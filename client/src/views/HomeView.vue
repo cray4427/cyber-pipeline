@@ -28,8 +28,8 @@
       <header class="mb-2">
         <h1 class="p-title">Kansas State University: Cyber Pipeline Program</h1>
         <p class="p-text-secondary">Making quality computer science education available to all high school students at little or no cost.</p>
-        <div v-if="svgUrl">
-          <iframe :src="svgUrl" frameborder="0"></iframe>
+        <div v-if="svgUrl" class="map-container">
+          <iframe id="svgFrame" ref="svgIframe" :src="svgUrl" frameborder="0"></iframe>
         </div>
       </header>
       <section v-if="activeTab === 'curriculum'" class="p-section">
@@ -60,7 +60,15 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import { useDistrictsStore } from '../stores/Districts.js'
+import { storeToRefs } from 'pinia'
+
+const districtsStore = useDistrictsStore()
+
+districtsStore.hydrate()
+
+const { getAllDistrictsUsd } = storeToRefs(districtsStore)
 
 const activeTab = ref('curriculum');
 
@@ -70,24 +78,24 @@ function setActiveTab(tab) {
 
 const districts = ref('');
 const svgUrl = ref('');
+const svgIframe = ref(null);
 
 const getDistrictList = async () => {
-  try{
-    const response = await fetch('/api/vi/districts')
-    if(!response.ok) {
-      throw new Error('Failed to fetch district list')
-    }
-    const data = await response.json()
-    const usdList = data.map(district => district.usd)
-    districts.value = usdList.join(',')
-    svgUrl.value = 'https://k12map.cs.ksu.edu/Map?districts=${districts.value}'
-  } catch(error) {
-    throw new Error('Failed to fetch district list')
-  }
+  districts.value = getAllDistrictsUsd.value
+  svgUrl.value = 'https://k12map.cs.ksu.edu/Map?districts=' + districts.value
+  console.log(svgUrl.value)
 }
 
 onMounted(() => {
-  getDistrictList()
+  watch(
+    () => districtsStore.districts,
+    (newDistricts) => {
+      if(newDistricts.length > 0) {
+        getDistrictList()
+      }
+    },
+    { immediate: true }
+  )
 })
 
 </script>
@@ -152,5 +160,16 @@ onMounted(() => {
 .p-text {
   font-size: 1.2em;
   line-height: 1.6;
+}
+
+.map-container{
+  width: 700px;
+  height: 400px;
+  
+}
+
+.map-container iframe{
+  width: 100%;
+  height: 100%;
 }
 </style>

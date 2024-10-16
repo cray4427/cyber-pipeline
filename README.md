@@ -25,4 +25,4 @@ If any changes are made to the seed file found in "server > seeds > initial_data
 1. cd server
 2. knex seed:run  
 
-If 'knex' is an unknown command, simply install it globally through the node command 'npm intall knex -g' and re-do Step 2.
+If 'knex' is an unknown command, simply install it globally through the node command 'npm install knex -g' and re-do Step 2.

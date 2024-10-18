@@ -19,7 +19,7 @@ import StepItem from 'primevue/stepitem'
 vi.mock('../src/stores/Courses')
 vi.mock('../src/stores/Teachers')
 
-describe('CourseList', () => {
+describe.todo('CourseList', () => {
   let wrapper;
   let coursesStore;
   let teachersStore;

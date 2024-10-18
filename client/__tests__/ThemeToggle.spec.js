@@ -3,7 +3,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { describe, it, beforeEach, expect } from 'vitest'
 import ThemeToggle from '@/components/topmenu/ThemeToggle.vue'
 
-describe.todo('ThemeToggle', () => {
+describe('ThemeToggle', () => {
 
   const pinia = createPinia()
   setActivePinia(pinia) // Makes Pinia active

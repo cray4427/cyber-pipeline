@@ -18,6 +18,13 @@ export default mergeConfig(
       },
       fileParallelism: false,
       setupFiles: './__tests__/setupTests.js', // Path to your setup file
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json', 'html'], // Choose desired reporters
+        include: ['src/**/*.{js,ts,vue}'], // Specify which files to include in coverage
+        exclude: ['node_modules/**/*'], // Specify files to exclude from coverage
+        reportsDirectory: './__tests__/coverage'
+      },
     }
   })
 )

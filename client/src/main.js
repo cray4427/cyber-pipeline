@@ -25,10 +25,14 @@ import 'primeicons/primeicons.css'
 // import 'primevue/resources/themes/aura-light-purple/theme.css'
 // import 'primevue/resources/themes/aura-dark-purple/theme.css'
 import 'primeflex/primeflex.css'
+import Aura from '@primevue/themes/aura'
+
+
 
 // App and Vue Router
 import App from './App.vue'
 import router from './router'
+import { Theme } from '@primevue/themes'
 
 // Setup Axios Interceptors
 setupInterceptors()
@@ -44,6 +48,14 @@ app.use(router)
 
 // Configure PrimeVue
 app.use(PrimeVue, {
+  theme: {
+    preset: Aura,
+    options: {
+      prefix: 'p',
+      darkModeSelector: '.app-dark',
+      cssLayer: false
+    },
+  },
   ripple: true,
   inputStyle: 'filled'
 })

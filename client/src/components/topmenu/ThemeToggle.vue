@@ -8,10 +8,8 @@ import { usePrimeVue } from 'primevue/config'
 const PrimeVue = usePrimeVue()
 import Logger from 'js-logger'
 
-import { usePreset } from '@primevue/themes'
-
 // Theme reference
-const themeDark = ref('aura-light-purple')
+const themeDark = ref('light-theme')
 
 /**
  * Get theme from local storage
@@ -26,9 +24,9 @@ const getTheme = () => {
 const getMediaPreference = () => {
   const hasDarkPreference = window.matchMedia('(prefers-color-scheme: dark)').matches
   if (hasDarkPreference) {
-    return 'aura-dark-purple'
+    return 'dark-theme'
   } else {
-    return 'aura-light-purple'
+    return 'light-theme'
   }
 }
 
@@ -45,22 +43,18 @@ onMounted(() => {
  */
 const updateTheme = () => {
   Logger.info('Update theme to ' + themeDark.value)
-
-  const themeLink = document.getElementById('theme-link')
-
-  if(themeLink) {
-    themeLink.href = themeDark.value === 'aura-dark-purple' ? '/themes/aura-dark-purple/theme.css' : '/themes/aura-light-purple/theme.css'
-  }
+  document.documentElement.classList.toggle('app-dark')
+  localStorage.setItem('user-theme', themeDark.value)
 }
 
 /**
  * Toggle theme value and trigger update
  */
 const toggleDarkMode = () => {
-  if (themeDark.value == 'aura-dark-purple') {
-    themeDark.value = 'aura-light-purple'
+  if (themeDark.value == 'dark-theme') {
+    themeDark.value = 'light-theme'
   } else {
-    themeDark.value = 'aura-dark-purple'
+    themeDark.value = 'dark-theme'
   }
   updateTheme()
 }
@@ -74,7 +68,7 @@ const toggleDarkMode = () => {
         @click="toggleDarkMode()"
       >
         <span
-          v-if="themeDark == 'aura-light-purple'"
+          v-if="themeDark == 'light-theme'"
           class="pi pi-moon"
           v-tooltip.bottom="'Toggle Dark Mode'"
         />

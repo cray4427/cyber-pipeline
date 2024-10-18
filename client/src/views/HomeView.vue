@@ -28,6 +28,9 @@
       <header class="mb-2">
         <h1 class="p-title">Kansas State University: Cyber Pipeline Program</h1>
         <p class="p-text-secondary">Making quality computer science education available to all high school students at little or no cost.</p>
+        <div v-if="svgUrl" class="map-container">
+          <iframe id="svgFrame" ref="svgIframe" :src="svgUrl" frameborder="0"></iframe>
+        </div>
       </header>
       <section v-if="activeTab === 'curriculum'" class="p-section">
         <h2 class="p-subtitle">Curriculum</h2>
@@ -57,13 +60,44 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import { useDistrictsStore } from '../stores/Districts.js'
+import { storeToRefs } from 'pinia'
+
+const districtsStore = useDistrictsStore()
+
+districtsStore.hydrate()
+
+const { getAllDistrictsUsd } = storeToRefs(districtsStore)
 
 const activeTab = ref('curriculum');
 
 function setActiveTab(tab) {
   activeTab.value = tab;
 }
+
+const districts = ref('');
+const svgUrl = ref('');
+const svgIframe = ref(null);
+
+const getDistrictList = async () => {
+  districts.value = getAllDistrictsUsd.value
+  svgUrl.value = 'https://k12map.cs.ksu.edu/Map?districts=' + districts.value
+  console.log(svgUrl.value)
+}
+
+onMounted(() => {
+  watch(
+    () => districtsStore.districts,
+    (newDistricts) => {
+      if(newDistricts.length > 0) {
+        getDistrictList()
+      }
+    },
+    { immediate: true }
+  )
+})
+
 </script>
 
 <style scoped>
@@ -126,5 +160,16 @@ function setActiveTab(tab) {
 .p-text {
   font-size: 1.2em;
   line-height: 1.6;
+}
+
+.map-container{
+  width: 700px;
+  height: 400px;
+  
+}
+
+.map-container iframe{
+  width: 100%;
+  height: 100%;
 }
 </style>

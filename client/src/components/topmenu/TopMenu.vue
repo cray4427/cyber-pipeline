@@ -130,7 +130,7 @@ tokenStore.$subscribe(() => {
     </template>
     <template #end>
       <div class="flex align-items-center gap-2">
-        <ThemeToggle />
+        <ThemeToggle /> 
         <LoginProfile />
       </div>
     </template>

@@ -17,6 +17,9 @@ export default defineConfig({
       ]
     })
   ],
+  optimizeDeps: {
+    excluse: ['@primevue/themes']
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

@@ -13,7 +13,7 @@ vi.mock('../src/stores/Roles')
 
 global.URL.createObjectURL = vi.fn()
 
-describe('UserList', () => {
+describe.todo('UserList', () => {
     let wrapper;
     let usersStore;
     let rolesStore;

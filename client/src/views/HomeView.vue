@@ -29,7 +29,7 @@
         <h1 class="p-title">Kansas State University: Cyber Pipeline Program</h1>
         <p class="p-text-secondary">Making quality computer science education available to all high school students at little or no cost.</p>
         <div v-if="svgUrl" class="map-container">
-          <iframe id="svgFrame" ref="svgIframe" :src="svgUrl" frameborder="0"></iframe>
+          <img id="svg-image" :src="svgUrl" alt="Failed to load map"/>
         </div>
       </header>
       <section v-if="activeTab === 'curriculum'" class="p-section">
@@ -78,13 +78,13 @@ function setActiveTab(tab) {
 
 const districts = ref('');
 const svgUrl = ref('');
-const svgIframe = ref(null);
 
 const getDistrictList = async () => {
   districts.value = getAllDistrictsUsd.value
   svgUrl.value = 'https://k12map.cs.ksu.edu/Map?districts=' + districts.value
   console.log(svgUrl.value)
 }
+
 
 onMounted(() => {
   watch(

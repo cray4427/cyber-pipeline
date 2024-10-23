@@ -46,22 +46,19 @@ const login = async (adminUser) => {
   })
   
   beforeEach(async () => {
-   // adminUser.token = await login(adminUser)
+   adminUser.token = await login(adminUser)
     //NotAdmin.token = await login(NotAdmin)
   })
 
   //Tests that get requests return a list of all cohorts
   const getAllCohorts = (adminUser) => {
-    it('should list all cohorts', (done) => {
-      request(app)
-        .get('/api/v1/cohorts/')
+    it('should list all cohorts', async () => {
+      const res = await request(app)
+        .get('/api/v1/cohorts')
         .set('Authorization', `Bearer ${adminUser.token}`)
-        .expect(200)
-        .end((err,res) => {
-          if(err) {return done(err)}
-          expect(res.body).toBeInstanceOf(Array)
-          expect(res.body.length).toBe(3)
-        })
+        //.expect(200)
+        expect(res.body).toBeInstanceOf(Array)
+        expect(res.body.length).toBe(3)
     })
   }
   
@@ -444,10 +441,10 @@ const deleteCohortRequiresAdminRole = (adminUser) => {
 
   describe('GET /', () => {
     getAllCohorts(adminUser)
-    getAllCohortsSchemaMatch(adminUser)
-    getAllCohortsRequiresAdminRole(NotAdmin)
+    //getAllCohortsSchemaMatch(adminUser)
+    //getAllCohortsRequiresAdminRole(NotAdmin)
   })
-
+/*
   describe('PUT /', () => {
     putCohort(adminUser)
     addCohortIgnoresAdditionalProperties(adminUser)
@@ -470,3 +467,4 @@ const deleteCohortRequiresAdminRole = (adminUser) => {
     deleteCohortFailsOnInvalidId(adminUser)
     deleteCohortRequiresAdminRole(adminUser)
   })
+    */

@@ -29,6 +29,9 @@ async function authenticateToken(req, res, next) {
     // HACK This trusts the JWT signature to give admin privs.
     // See below for a DB method for this - less efficient.
     req.roles = user.roles
+    console.log("token.js: " + req.roles)
+    console.log("id: " + user.user_id)
+    console.log("eid: " + user)
 
     // // check if admin
     // const roles = await User.relatedQuery('roles')

@@ -18,7 +18,13 @@ export const useEmailsStore = defineStore('emails', {
             } catch (error) {
                 Logger.error('Failed to send email: ', error);
             }
-        }
+        },
+        //async hydrate() {
+        //    Logger.info('emails:hydrate')
+        //    await api.get('/api/v1/emails').then((response) => {
+        //        this.emails = response.data
+        //    })
+        //}
     }
 
 })

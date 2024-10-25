@@ -36,6 +36,7 @@
     "morgan": "~1.10.0",
     "mysql": "^2.18.1",
     "node-cas-authentication": "github:alt-cs-lab/cas-authentication",
+    "nodemailer": "^6.9.15",
     "nodemon": "^3.1.4",
     "objection": "^3.1.4",
     "pug": "^3.0.3",

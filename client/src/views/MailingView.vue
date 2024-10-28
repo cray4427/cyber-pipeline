@@ -2,20 +2,18 @@
   <div class="mailing-view">
     <h1>Send Email</h1>
     <form @submit.prevent="sendEmail">
-      <TextField 
-        label="Recipient"
-        field="recipient"
-        icon="pi pi-envelope"
-        v-model="recipient"
-        class="form-field"
-        :errors="[]"
-      >
-        <InputText
-          id="recipient"
-          v-model="recipient"
-          placeholder="Enter recipient email"
-        />
-      </TextField>
+      <div class="form-field">
+        <label for="recipient">Recipients</label>
+        <div @click="showRecipientDialog" class="fake-text-field">
+          <InputText
+            id="recipient"
+            v-model="recipientDisplay"
+            placeholder="Click to select recipients"
+            readonly
+          />
+        </div>
+      </div>
+
       <TextField
         label="Subject"
         field="subject"
@@ -57,27 +55,132 @@
       severity="error"
       >{{ message }}</Message
     >
+
+    <!-- Dialog for selecting recipients -->
+    <Dialog
+      v-model:visible="recipientDialog"
+      header="Select Recipients"
+      :modal="true"
+      style="width: 50vw"
+      :closeOnEscape="true"
+    >
+      <div>
+        <div class="p-inputgroup">
+          <InputText
+            v-model="searchTerm"
+            placeholder="Search by name or email"
+            @input="filterTeachers"
+          />
+        </div>
+        <DataTable
+          :value="filteredTeachers"
+          stripedRows
+          paginator
+          :rows="5"
+          tableStyle="min-width: 50rem"
+        >
+          <Column field="name" header="Name"></Column>
+          <Column field="email" header="Email"></Column>
+          <Column header="Actions">
+            <template #body="slotProps">
+              <Button
+                v-if="!recipient.includes(slotProps.data.email)"
+                label="Add"
+                icon="pi pi-check"
+                @click="selectRecipient(slotProps.data)"
+                class="p-button-success"
+              />
+              <Button
+                v-else
+                label="Remove"
+                icon="pi pi-times"
+                @click="removeRecipient(slotProps.data)"
+                class="p-button-danger"
+              />
+            </template>
+          </Column>
+        </DataTable>
+      </div>
+      <div class="dialog-footer">
+        <Button
+          label="Close"
+          icon="pi pi-times"
+          @click="recipientDialog = false"
+          class="p-button-text"
+        />
+      </div>
+    </Dialog>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useEmailsStore } from '../stores/Emails.js'
+import { useTeachersStore } from '@/stores/Teachers.js'
 import InputText from 'primevue/inputtext'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 import Button from 'primevue/button'
+import Dialog from 'primevue/dialog'
 import Message from 'primevue/message'
 import TextField from '@/components/forms/TextField.vue'
 
 const emailStore = useEmailsStore()
-const recipient = ref('')
+const teachersStore = useTeachersStore()
+
+const recipient = ref([])
+const recipientDisplay = ref('')
 const subject = ref('')
 const text = ref('')
 const message = ref('')
+const recipientDialog = ref(false)
+const searchTerm = ref('')
+const filteredTeachers = ref([])
 
+// Fetch the teachers list when the component is mounted
+onMounted(async () => {
+  await teachersStore.hydrate()
+  filteredTeachers.value = teachersStore.teachers
+})
+
+// Show dialog for recipient selection
+const showRecipientDialog = () => {
+  recipientDialog.value = true
+}
+
+// Filter teachers based on search term
+const filterTeachers = () => {
+  const term = searchTerm.value.toLowerCase()
+  filteredTeachers.value = teachersStore.teachers.filter(teacher =>
+    teacher.name.toLowerCase().includes(term) ||
+    teacher.email.toLowerCase().includes(term)
+  )
+}
+
+// Select a recipient and update the display
+const selectRecipient = (teacher) => {
+  if (!recipient.value.includes(teacher.email)) {
+    recipient.value.push(teacher.email)
+    recipientDisplay.value = recipient.value.join(', ')
+  }
+}
+
+const removeRecipient = (teacher) => {
+  if(recipient.value.includes(teacher.email)){
+    recipient.value = recipient.value.filter(email => email !== teacher.email)
+    updateRecipientDisplay()
+  }
+}
+
+const updateRecipientDisplay = () => {
+  recipientDisplay.value = recipient.value.join(', ')
+}
+
+// Send email function
 const sendEmail = async () => {
   try {
-    if(!recipient.value){
-      message.value = 'Recipient is required'
+    if (!recipient.value.length) {
+      message.value = 'At least one recipient is required'
       return
     }
     await emailStore.sendEmail({
@@ -86,7 +189,8 @@ const sendEmail = async () => {
       text: text.value,
       html: text.value,
     })
-    recipient.value = ''
+    recipient.value = []
+    recipientDisplay.value = ''
     subject.value = ''
     text.value = ''
     message.value = 'Email sent successfully'
@@ -97,8 +201,7 @@ const sendEmail = async () => {
 }
 </script>
 
-
-<style scope>
+<style scoped>
 .mailing-view {
   max-width: 600px;
   margin: 0 auto;
@@ -108,5 +211,14 @@ const sendEmail = async () => {
 .form-field {
   margin-bottom: 30px;
 }
-</style>
 
+.fake-text-field {
+  width: 100%;
+  cursor: pointer;
+}
+
+.dialog-footer {
+  text-align: right;
+  padding: 1rem;
+}
+</style>

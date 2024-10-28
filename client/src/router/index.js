@@ -37,77 +37,76 @@ const requireUser = () => {
   }
 }
 
+// List of routes
+export const routes = [
+  // Homepage
+  {
+    path: '/',
+    name: 'home',
+    component: HomeView
+  },
+
+  // Profile page
+  {
+    path: '/profile',
+    name: 'profile',
+    component: ProfileView
+  },
+
+  // Teachers page
+  {
+    path: '/teachers',
+    name: 'teachers',
+    component: TeacherView,
+    beforeEnter: requireUser
+  },
+
+  // Districts page
+  {
+    path: '/districts',
+    name: 'districts',
+    component: DistrictView,
+    beforeEnter: requireUser
+  },
+
+  // Cohorts page
+  {
+    path: '/cohorts',
+    name: 'cohorts',
+    component: CohortView,
+    beforeEnter: requireAdmin
+  },
+
+  // Courses page
+  {
+    path: '/courses',
+    name: 'courses',
+    component: CourseView,
+    beforeEnter: requireAdmin
+  },
+
+  // Users page
+  {
+    path: '/users',
+    name: 'users',
+    component: UserView,
+    beforeEnter: requireAdmin
+  }
+  // Mailing List page
+  {
+    path: '/mailing',
+    name: 'mailing',
+    component: MailingView,
+    beforeEnter: requireAdmin
+  }
+]
 /**
  * Router factory method
  */
 const router = createRouter({
   // Enable virtual history
   history: createWebHistory(import.meta.env.BASE_URL),
-
-  // List of routes
-  routes: [
-    // Homepage
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-
-    // Profile page
-    {
-      path: '/profile',
-      name: 'profile',
-      component: ProfileView
-    },
-
-    // Teachers page
-    {
-      path: '/teachers',
-      name: 'teachers',
-      component: TeacherView,
-      beforeEnter: requireUser
-    },
-
-    // Districts page
-    {
-      path: '/districts',
-      name: 'districts',
-      component: DistrictView,
-      beforeEnter: requireUser
-    },
-
-    // Cohorts page
-    {
-      path: '/cohorts',
-      name: 'cohorts',
-      component: CohortView,
-      beforeEnter: requireAdmin
-    },
-
-    // Courses page
-    {
-      path: '/courses',
-      name: 'courses',
-      component: CourseView,
-      beforeEnter: requireAdmin
-    },
-
-    // Users page
-    {
-      path: '/users',
-      name: 'users',
-      component: UserView,
-      beforeEnter: requireAdmin
-    },
-
-    // Mailing List page
-    {
-      path: '/mailing',
-      name: 'mailing',
-      component: MailingView,
-      beforeEnter: requireAdmin
-    }
-  ]
+  routes
 })
 
 /**

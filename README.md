@@ -19,3 +19,10 @@ Upon cloning the repository, copy '.env.example' to 'server/.env', this is confi
 
 There are VSCode Tasks set up to launch the client and server together. CTRL + SHIFT + P and then look for Run Tasks and choose Watch All.
 
+## Updating the seed file:
+
+If any changes are made to the seed file found in "server > seeds > initial_data.js", you will need to re-seed the Knex Db through the following steps:
+1. cd server
+2. knex seed:run  
+
+If 'knex' is an unknown command, simply install it globally through the node command 'npm install knex -g' and re-do Step 2.

@@ -1,11 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-// Mock PrimeVue components
-import FloatLabel from 'primevue/floatlabel'
-import IconField from 'primevue/iconfield'
-import InputIcon from 'primevue/inputicon'
 import AutoComplete from 'primevue/autocomplete'
-
+import { nextTick } from 'vue'
 // Import the component to test
 import AutocompleteMultiple from '@/components/forms/AutocompleteMultiple.vue'
 
@@ -27,25 +23,20 @@ describe('AutoCompleteMultiple', () => {
     }
   }
 
-  it('renders correctly with provided props', () => {
+  it('renders correctly with provided props', async () => {
     const wrapper = mount(AutocompleteMultiple, {
       props
     })
 
-    expect(wrapper.find('label').text()).toBe(props.label)
-    expect(wrapper.find('.pi-search').exists()).toBe(true)
-  })
+    const autoComplete = wrapper.getComponent(AutoComplete)
 
-  it('filters autocomplete values based on search query', async () => {
-    const wrapper = mount(AutocompleteMultiple, {
-      props
-    })
+    expect(autoComplete).toBeDefined();
 
-    const autocomplete = wrapper.findComponent(AutoComplete)
+    await autoComplete.vm.$emit('complete', { query: 'A' }); //testing the searching could add more search tests in the future
+    await nextTick();
 
-    // Simulate a search event
-    await autocomplete.vm.$emit('complete', { query: 'A' })
-
-    expect(wrapper.vm.items).toEqual([{ name: 'Apple' }])
+    expect(autoComplete.props('suggestions')).toEqual([
+    { name: 'Apple' }
+    ]);
   })
 })

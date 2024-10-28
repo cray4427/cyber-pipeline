@@ -13,10 +13,11 @@
     "lint": "eslint --fix .",
     "oldtest": "mocha --require test/hooks.js --recursive --timeout 2000 --exit",
     "test": "vitest",
-    "cov": "nyc --reporter=html mocha --require test/hooks.js --recursive --timeout 2000 --exit",
+    "coverage": "vitest run --coverage",
     "test-json": "mocha --require test/hooks.js --recursive --timeout 2000 --exit --reporter json > test-results.json"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "axios": "^1.7.7",
     "cjstoesm": "^2.1.2",

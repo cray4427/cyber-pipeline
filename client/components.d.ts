@@ -24,6 +24,7 @@ declare module 'vue' {
     InputSwitch: typeof import('primevue/inputswitch')['default']
     InputText: typeof import('primevue/inputtext')['default']
     LoginProfile: typeof import('./src/components/topmenu/LoginProfile.vue')['default']
+    MailingList: typeof import('./src/components/mailing/MailingList.vue')['default']
     Menu: typeof import('primevue/menu')['default']
     Menubar: typeof import('primevue/menubar')['default']
     Message: typeof import('primevue/message')['default']

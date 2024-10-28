@@ -75,6 +75,13 @@ tokenStore.$subscribe(() => {
         command: () => {
           router.push({ name: 'users' })
         }
+      },
+      {
+        label: 'Mailing',
+        icon: 'pi pi-envelope',
+        command: () => {
+          router.push({ name: 'mailing'})
+        }
       }
     ]
   } else if (tokenStore.is_user) {

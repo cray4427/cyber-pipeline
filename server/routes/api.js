@@ -39,6 +39,7 @@ import teacherRouter from './api/teachers.js'
 import cohortRouter from './api/cohorts.js'
 import courseRouter from './api/courses.js'
 import dashboardRouter from './api/dashboard.js'
+import emailRouter from './api/emails.js'
 
 // Load Token Middleware
 router.use(token)
@@ -57,6 +58,7 @@ router.use('/teachers', teacherRouter)
 router.use('/cohorts', cohortRouter)
 router.use('/courses', courseRouter)
 router.use('/dashboard', dashboardRouter)
+router.use('/emails', emailRouter)
 
 /**
  * @swagger

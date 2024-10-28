@@ -87,8 +87,8 @@ export async function seed (knex) {
       updated_at: now,
       created_by: 'test-admin',
       updated_by: 'test-admin',
-    },
-    {
+    }
+  /*  {
       user_id: '4',
       role_id: '1',
       created_at: now,
@@ -223,7 +223,8 @@ export async function seed (knex) {
       updated_at: now,
       created_by: 'test-admin',
       updated_by: 'test-admin',
-    },    
+    }, 
+  */   
   ])
 
   // Districts

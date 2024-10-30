@@ -2,18 +2,22 @@
   <div class="mailing-view">
     <h1>Send Email</h1>
     <form @submit.prevent="sendEmail">
-      <div class="form-field">
-        <label for="recipient">Recipients</label>
-        <div @click="showRecipientDialog" class="fake-text-field">
-          <InputText
+      <TextField
+        label="Recipients"
+        field="recipients"
+        icon="pi pi-envelope"
+        v-model="recipientDisplay"
+        class="form-field-recipient"
+        @click="showRecipientDialog"
+        :errors="[]"
+      >
+        <InputText
             id="recipient"
             v-model="recipientDisplay"
-            placeholder="Click to select recipients"
+            placeholder="Recipients"
             readonly
-          />
-        </div>
-      </div>
-
+        />    
+      </TextField>
       <TextField
         label="Subject"
         field="subject"
@@ -57,12 +61,14 @@
     >
 
     <!-- Dialog for selecting recipients -->
+    <!-- @show set to 'focusCloseButton' to prevent the user from typing in the TextField after closing the dialog (bandaid fix) -->
     <Dialog
       v-model:visible="recipientDialog"
       header="Select Recipients"
       :modal="true"
       style="width: 50vw"
       :closeOnEscape="true"
+      @show="focusCloseButton" 
     >
       <div>
         <div class="p-inputgroup">
@@ -74,7 +80,6 @@
         </div>
         <DataTable
           :value="filteredTeachers"
-          stripedRows
           paginator
           :rows="5"
           tableStyle="min-width: 50rem"
@@ -103,6 +108,7 @@
       </div>
       <div class="dialog-footer">
         <Button
+          ref="closeButton"
           label="Close"
           icon="pi pi-times"
           @click="recipientDialog = false"
@@ -137,6 +143,8 @@ const recipientDialog = ref(false)
 const searchTerm = ref('')
 const filteredTeachers = ref([])
 
+const closeButton = ref(null)
+
 // Fetch the teachers list when the component is mounted
 onMounted(async () => {
   await teachersStore.hydrate()
@@ -165,6 +173,7 @@ const selectRecipient = (teacher) => {
   }
 }
 
+// Removes a recipient from the list
 const removeRecipient = (teacher) => {
   if(recipient.value.includes(teacher.email)){
     recipient.value = recipient.value.filter(email => email !== teacher.email)
@@ -172,9 +181,17 @@ const removeRecipient = (teacher) => {
   }
 }
 
+// Updates the recipient input field after removing a recipient
 const updateRecipientDisplay = () => {
   recipientDisplay.value = recipient.value.join(', ')
 }
+
+const focusCloseButton = () => {
+  if(closeButton.value){
+    closeButton.value.$el.focus()
+  }
+}
+
 
 // Send email function
 const sendEmail = async () => {
@@ -212,10 +229,11 @@ const sendEmail = async () => {
   margin-bottom: 30px;
 }
 
-.fake-text-field {
-  width: 100%;
+.form-field-recipient {
+  margin-bottom: 30px;
   cursor: pointer;
 }
+
 
 .dialog-footer {
   text-align: right;

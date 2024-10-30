@@ -92,7 +92,6 @@ export const routes = [
     component: UserView,
     beforeEnter: requireAdmin
   },
-  
   // Mailing List page
   {
     path: '/mailing',

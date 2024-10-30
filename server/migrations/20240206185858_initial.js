@@ -86,6 +86,7 @@ export function up(knex) {
           table.integer('cert_status').defaultTo(0)
           table.integer('ms_status').defaultTo(0)
           table.string('grade_level')
+          table.integer('num_students').defaultTo(0)
           table.text('notes').nullable()
           table.timestamps()
           table.string('created_by', 20)

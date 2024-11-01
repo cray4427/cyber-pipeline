@@ -86,6 +86,7 @@ export function up(knex) {
           table.integer('cert_status').defaultTo(0)
           table.integer('ms_status').defaultTo(0)
           table.string('grade_level')
+          table.integer('num_students').defaultTo(0)
           table.text('notes').nullable()
           table.timestamps()
           table.string('created_by', 20)
@@ -193,7 +194,21 @@ export function up(knex) {
           table.string('updated_by', 20)
         });
       }
-    });
+    })
+    //.then(() => knex.schema.hasTable('emails'))
+    //.then(exists => {
+    //  if (!exists) {
+    //   return knex.schema.createTable('emails', function (table) {
+    //      table.increments('id')
+    //      table.string('subject', 255).notNullable()
+    //      table.text('email_body').notNullable()
+    //      table.string('recipients').notNullable()
+    //      table.int('status').defaultTo(0) // 0 for pending, 1 for sent, 2 for failed
+    //      table.string('created_by', 20)
+    //      table.timestamps()
+    //    })
+    //  }
+    //})
 }
 
 /**
@@ -212,4 +227,5 @@ export function down(knex) {
     .dropTableIfExists('user_roles')
     .dropTableIfExists('roles')
     .dropTableIfExists('users')
+    //.dropTableIfExists('emails')
 }

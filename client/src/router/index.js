@@ -10,6 +10,7 @@ import UserView from '../views/UserView.vue'
 import CohortView from '../views/CohortView.vue'
 import CourseView from '../views/CourseView.vue'
 import MailingView from '../views/MailingView.vue'
+import AnalyticsView from '../views/AnalyticsView.vue'
 
 // Stores
 import { useTokenStore } from '@/stores/Token'
@@ -97,6 +98,13 @@ export const routes = [
     path: '/mailing',
     name: 'mailing',
     component: MailingView,
+    beforeEnter: requireAdmin
+  },
+  // Analytics page
+  {
+    path: '/analytics',
+    name: 'analytics',
+    component: AnalyticsView,
     beforeEnter: requireAdmin
   }
 ]

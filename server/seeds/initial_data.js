@@ -87,7 +87,7 @@ export async function seed (knex) {
       updated_at: now,
       created_by: 'test-admin',
       updated_by: 'test-admin',
-    },  
+    }, 
   ])
 
   // Districts

@@ -19,5 +19,4 @@ describe('TextAreaField', () => {
 
         expect(wrapper.findComponent(Textarea).exists()).toBe(true)
     })
-
 })

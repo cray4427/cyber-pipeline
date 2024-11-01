@@ -9,6 +9,7 @@ import TeacherView from '../views/TeacherView.vue'
 import UserView from '../views/UserView.vue'
 import CohortView from '../views/CohortView.vue'
 import CourseView from '../views/CourseView.vue'
+import MailingView from '../views/MailingView.vue'
 
 // Stores
 import { useTokenStore } from '@/stores/Token'
@@ -90,9 +91,15 @@ export const routes = [
     name: 'users',
     component: UserView,
     beforeEnter: requireAdmin
+  },
+  // Mailing List page
+  {
+    path: '/mailing',
+    name: 'mailing',
+    component: MailingView,
+    beforeEnter: requireAdmin
   }
 ]
-
 /**
  * Router factory method
  */

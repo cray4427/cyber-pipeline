@@ -1,4 +1,3 @@
-// YourComponent.spec.js
 import { createPinia, setActivePinia } from 'pinia';
 import LoginProfile from '@/components/topmenu/LoginProfile.vue';
 import { useTokenStore } from '@/stores/Token';

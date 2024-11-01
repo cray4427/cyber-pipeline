@@ -54,6 +54,7 @@ router.get('/login', async function (req, res, next) {
     if (req.query.eid && process.env.FORCE_AUTH === 'true') {
       // force authentication enabled, use eID from query
       eid = req.query.eid
+      console.log(req.query)
     } else {
       // use CAS authentication
       if (req.session[cas.session_name] === undefined) {

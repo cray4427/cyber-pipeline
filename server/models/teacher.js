@@ -1,8 +1,12 @@
 import Model from './base.js'
 
-import DistrictModule from './district.js'
-import CohortModule from './cohort.js'
-import CourseModule from './course.js'
+// import DistrictModule from './district.js'
+// import CohortModule from './cohort.js'
+// import CourseModule from './course.js'
+
+import Cohort from './cohort.js'
+import Course from './course.js'
+import District from './district.js'
 
 /**
  * @swagger
@@ -193,9 +197,9 @@ class Teacher extends Model {
   // This object defines the relations to other models.
   static get relationMappings() {
     // Importing models here is one way to avoid require loops.
-    const District = DistrictModule.default
-    const Cohort = CohortModule.default
-    const Course = CourseModule.default
+    // const District = DistrictModule.default
+    // const Cohort = CohortModule.default
+    // const Course = CourseModule.default
 
     return {
       districts: {

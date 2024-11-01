@@ -1,33 +1,40 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import ProfileEdit from '@/components/profile/ProfileEdit.vue'
 import { useProfileStore } from '@/stores/Profile'
-import PrimeVue from 'primevue/config'
 import { ref } from 'vue'
+import Panel from 'primevue/panel'
 import TextField from '@/components/forms/TextField.vue'
 
 vi.mock('@/stores/Profile')
 
-describe.todo('ProfileEdit', () => {
+describe('ProfileEdit', () => {
 
-  const profileStore = {
-    hydrate: vi.fn(),
-    update: vi.fn(),
-    user: ref({
-      eid: '12345',
-      name: 'John Doe',
-    }),
-  }
-  useProfileStore.mockReturnValue(profileStore)
+  let wrapper;
+  let profileStore
 
-  const wrapper = mount(ProfileEdit, {
-    global: {
-      plugins: [PrimeVue]
+  beforeEach(() => {
+    profileStore = {
+      hydrate: vi.fn(),
+      update: vi.fn(),
+      user: ref({
+        eid: '12345',
+        name: 'John Doe',
+      }),
     }
-  })
+    useProfileStore.mockReturnValue(profileStore)
+
+    // Mount the component with props and reactive properties
+    wrapper = mount(ProfileEdit);
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+  });
 
   it('renders correctly', () => {
-    expect(wrapper.exists()).toBe(true);
+    const panel = wrapper.findComponent(Panel)
+    expect(panel.props('header')).toBe("Profile Settings")
   })
 
   it('should have eid textfield disabled and name textfield enabled', () => {

@@ -16,7 +16,7 @@ const router = createRouter({
   ]
 })
 
-describe.todo('TopMenu', () => {
+describe('TopMenu', () => {
   beforeEach(async () => {
     router.push('/')
     await router.isReady()
@@ -40,7 +40,7 @@ describe.todo('TopMenu', () => {
   })
 
   it('updates the menu items when the user is an admin', async () => {
-    const wrapper = mount(MyComponent, {
+    const wrapper = mount(TopMenu, {
       global: {
         plugins: [router, createTestingPinia({
           initialState: {
@@ -61,7 +61,7 @@ describe.todo('TopMenu', () => {
   })
 
   it('navigates to the correct route on menu item click', async () => {
-    const wrapper = mount(MyComponent, {
+    const wrapper = mount(TopMenu, {
       global: {
         plugins: [router, createTestingPinia({ stubActions: false })]
       }

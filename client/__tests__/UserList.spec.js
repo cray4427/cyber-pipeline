@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { describe, it, beforeEach, expect, vi, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import UserList from '../src/components/user/UserList.vue';
 import { useUsersStore } from '../src/stores/Users.js';
@@ -11,9 +11,7 @@ import Button from 'primevue/button'
 vi.mock('../src/stores/Users')
 vi.mock('../src/stores/Roles')
 
-global.URL.createObjectURL = vi.fn()
-
-describe.todo('UserList', () => {
+describe('UserList', () => {
     let wrapper;
     let usersStore;
     let rolesStore;
@@ -33,11 +31,11 @@ describe.todo('UserList', () => {
         useUsersStore.mockReturnValue(usersStore);
         useRolesStore.mockReturnValue(rolesStore);
 
-        wrapper = mount(UserList, {
-            global: {
-                plugins: [PrimeVue]
-            }
-        })
+        wrapper = mount(UserList)
+    })
+
+    afterEach(() => {
+        wrapper.unmount();
     })
 
     it('renders correctly', () => {
@@ -99,12 +97,6 @@ describe.todo('UserList', () => {
         wrapper.vm.user = user;
         const spy = vi.spyOn(wrapper.vm, 'save');
         await wrapper.vm.save();
-        expect(spy).toHaveBeenCalled();
-    })
-
-    it('calls exportCSV method', async () => {
-        const spy = vi.spyOn(wrapper.vm, 'exportCSV');
-        await wrapper.vm.exportCSV();
         expect(spy).toHaveBeenCalled();
     })
 

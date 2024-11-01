@@ -38,5 +38,7 @@ describe('AutoCompleteMultiple', () => {
     expect(autoComplete.props('suggestions')).toEqual([
     { name: 'Apple' }
     ]);
+
+    wrapper.unmount();
   })
 })

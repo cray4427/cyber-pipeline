@@ -9,12 +9,6 @@
             >
               <a @click.prevent="setActiveTab('tab1')">Item 1</a>
             </li>
-            <li 
-              class="p-tabview-nav-content" 
-              :class="{ 'p-highlight': activeTab === 'tab2' }"
-            >
-              <a @click.prevent="setActiveTab('tab2')">Item 2</a>
-            </li>
           </ul>
         </nav>
       </aside>
@@ -23,19 +17,13 @@
           <h1 class="p-title">Primary</h1>
           <p class="p-text-secondary">Description</p>
           <div class="table-container">
-
+              <MainTable />
           </div>
         </header>
         <section v-if="activeTab === 'tab1'" class="p-section">
           <h2 class="p-subtitle">Item 1</h2>
           <p class="p-text">
-            <EnrollmentTable />
-          </p>
-        </section>
-        <section v-if="activeTab === 'tab2'" class="p-section">
-          <h2 class="p-subtitle">Item 2</h2>
-          <p class="p-text">
-            Text body
+                      
           </p>
         </section>
       </main>
@@ -48,7 +36,7 @@
   import { useDistrictsStore } from '../stores/Districts.js'
   import { useCoursesStore } from '../stores/Courses.js'
   import { useCohortsStore } from '../stores/Cohorts.js'
-  import EnrollmentTable from '@/components/tables/EnrollmentTable.vue'
+  import MainTable from '@/components/analytics/EnrollmentTable.vue'
 
   const districtsStore = useDistrictsStore()
   const coursesStore = useCoursesStore()

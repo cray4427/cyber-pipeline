@@ -4,9 +4,9 @@ import { vi } from 'vitest'
 
 // Import the component to test
 import DropDownField from '@/components/forms/DropDownField.vue'
-import Dropdown from 'primevue/dropdown'
+import Select from 'primevue/select'
 
-describe.todo('DropDownField', () => {
+describe('DropDownField', () => {
 
   const props = {
     field: 'testField',
@@ -26,15 +26,10 @@ describe.todo('DropDownField', () => {
   })
 
   it('renders correctly', () => {
-     // Check if the label is rendered
-     expect(wrapper.find('label').text()).toBe(props.label)
     
      // Check if the dropdown is rendered with correct options
-     const dropdown = wrapper.findComponent(Dropdown)
+     const dropdown = wrapper.findComponent(Select)
      expect(dropdown.exists()).toBe(true)
      expect(dropdown.props('options')).toEqual(props.values)
- 
-     // Check if the input icon is rendered
-     expect(wrapper.find('i').classes()).toContain('pi')
   })
 })

@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { describe, it, expect, beforeEach, vi} from 'vitest'
+import { describe, it, expect, beforeEach, vi, afterEach} from 'vitest'
 import { useCoursesStore } from '../src/stores/Courses.js'
 import { useTeachersStore } from '../src/stores/Teachers.js'
 import PrimeVue from 'primevue/config'
@@ -19,7 +19,7 @@ import StepItem from 'primevue/stepitem'
 vi.mock('../src/stores/Courses')
 vi.mock('../src/stores/Teachers')
 
-describe.todo('CourseList', () => {
+describe('CourseList', () => {
   let wrapper;
   let coursesStore;
   let teachersStore;
@@ -46,10 +46,14 @@ describe.todo('CourseList', () => {
 
     wrapper = mount(CourseList, {
       global: {
-        plugins: [pinia, PrimeVue]
+        plugins: [pinia]
       }
     })
   })
+
+  afterEach(() => {
+    wrapper.unmount();
+  });
 
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true);

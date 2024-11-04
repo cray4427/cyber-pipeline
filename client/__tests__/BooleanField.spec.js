@@ -23,18 +23,9 @@ describe('BooleanField', () => {
     const toggleSwitch = wrapper.getComponent(ToggleSwitch);
 
     expect(toggleSwitch).toBeDefined();
+
+    wrapper.unmount();
   })
-
-  // it('should have label render correctly', () => {
-  //   const wrapper = mount(BooleanField, {
-  //     props
-  //   });
-
-  //   console.log('wrapper',wrapper.html());
-
-  //   const label = wrapper.get('label[for="TestLabel"]');
-  //   expect(label.text()).toBe(props.label);
-  // })
 
   it('disables ToggleSwitch when disabled prop is true', () => {
     const wrapper = mount(BooleanField, {
@@ -46,6 +37,8 @@ describe('BooleanField', () => {
 
     const toggleSwitch = wrapper.findComponent(ToggleSwitch);
     expect(toggleSwitch.props('disabled')).toBe(true);
+
+    wrapper.unmount();
   })
 
   it('enables InputSwitch when disabled prop is false', () => {
@@ -58,16 +51,7 @@ describe('BooleanField', () => {
 
     const toggleSwitch = wrapper.findComponent(ToggleSwitch)
     expect(toggleSwitch.props('disabled')).toBe(false);
+
+    wrapper.unmount();
   })
-
-  // it('displays error message when errors prop contains error for field', () => {
-  //   const wrapper = mount(BooleanField, {
-  //     ...props,
-  //     error: {testField: ["Error"]}
-  //   })
-
-  //   // Check if error message is displayed
-  //   const errorText = wrapper.get('small').text()
-  //   expect(errorText).toBe(props.errors.testField[0].message)
-  // })
 })

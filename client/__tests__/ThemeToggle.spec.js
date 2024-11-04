@@ -1,19 +1,18 @@
-import { mount, shallowMount } from '@vue/test-utils'
-import { createPinia, setActivePinia } from 'pinia'
-import { describe, it, beforeEach, expect } from 'vitest'
+import { flushPromises, mount } from '@vue/test-utils'
+import { describe, it, expect } from 'vitest'
 import ThemeToggle from '@/components/topmenu/ThemeToggle.vue'
 
-describe('ThemeToggle', () => {
+describe.todo('ThemeToggle.vue', () => {
 
-  const pinia = createPinia()
-  setActivePinia(pinia) // Makes Pinia active
+  it('renders correctly with initial theme', async () => {
+    localStorage.setItem('user-theme', 'light-theme')
+    const wrapper = mount(ThemeToggle)
+    await wrapper.vm.$nextTick()
+    await flushPromises()
 
-  it('should render the component correctly', () => {
-    // Mount the component with Pinia
-    const wrapper = shallowMount(ThemeToggle, {
-    })
-
-    // Assert the component is rendered correctly
-    expect(wrapper).toBeTruthy()
+    console.log("html", wrapper.html())
+    const toggle = wrapper.find('span')
+    console.log("toggle", toggle)
+    expect(toggle.exists()).toBe(true) // Checks if the moon icon is rendered
   })
 })

@@ -1,28 +1,53 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
-import { vi } from 'vitest'
-
-// Import the component to test
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import CohortDashboard from '@/components/cohort/CohortDashboard.vue'
+import Chart from 'primevue/chart'
+import Panel from 'primevue/panel'
 
-describe.todo('CohortDashboard', () => {
-  it('renders correctly', () => {
-    vi.mock('primevue/chart', () => ({
-        default: {
-          template: '<div class="chart-mock"></div>',
-        },
-      }))
-  
-    const wrapper = mount(CohortDashboard)
-    expect(wrapper.find('.chart-mock').exists()).toBe(true)
+// unmounting the CohortDashboard throws an error that should be looked into
+describe('CohortDashboard', () => {
+  let wrapper
 
-    const chartData = wrapper.vm.chartData
-    const chartOptions = wrapper.vm.chartOptions
+  beforeEach(() => {
+    wrapper = mount(CohortDashboard)
+  })
 
-    expect(chartData).toBeDefined()
-    expect(chartData.labels).toEqual(['January', 'February', 'March', 'April', 'May', 'June', 'July'])
-    
-    expect(chartOptions).toBeDefined()
-    expect(chartOptions.scales.x.stacked).toBe(true)
+  it('renders the Panel and Chart components', () => {
+    const panel = wrapper.findComponent(Panel)
+    const chart = wrapper.findComponent(Chart)
+
+    expect(panel.exists()).toBe(true)
+    expect(chart.exists()).toBe(true)
+  })
+
+  it('sets chart data and options on mount', () => {
+    // Check if chartData and chartOptions are defined
+    expect(wrapper.vm.chartData).toBeDefined()
+    expect(wrapper.vm.chartOptions).toBeDefined()
+
+    // Check if chartData has the expected structure
+    expect(wrapper.vm.chartData).toEqual({
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      datasets: [
+        expect.objectContaining({
+          type: 'bar',
+          label: 'Dataset 1',
+          data: [50, 25, 12, 48, 90, 76, 42]
+        }),
+        expect.objectContaining({
+          type: 'bar',
+          label: 'Dataset 2',
+          data: [21, 84, 24, 75, 37, 65, 34]
+        }),
+        expect.objectContaining({
+          type: 'bar',
+          label: 'Dataset 3',
+          data: [41, 52, 24, 74, 23, 21, 32]
+        })
+      ]
+    })
+
+    // Check if chartOptions has the expected structure
+    expect(wrapper.vm.chartOptions).toBeDefined()
   })
 })

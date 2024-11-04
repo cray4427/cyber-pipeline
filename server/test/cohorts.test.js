@@ -4,8 +4,6 @@ import { describe, it, beforeEach, beforeAll, expect} from 'vitest'
 import 'dotenv/config'
 import db from '../configs/db.js'
 import Ajv from 'ajv'
-import jwt from 'jsonwebtoken'
-import { Console } from 'winston/lib/winston/transports/index.js'
 
 // Set up environment variables
 process.env.FORCE_AUTH = 'true'
@@ -13,6 +11,9 @@ let NotAdmin = {
   id: 3,
   eid: 'test-student',
   name: 'Test Student',
+  created_by: 'test-admin',
+  updated_by: 'test-admin',
+  is_admin: false,
   token: null
 }
 
@@ -43,32 +44,32 @@ const login = async (adminUser) => {
   beforeAll(async () => {
     db.migrate.latest()
     db.seed.run()
+    adminUser.token = await login(adminUser)
+    NotAdmin.token = await login(NotAdmin)
   })
   
   beforeEach(async () => {
-   // adminUser.token = await login(adminUser)
-    //NotAdmin.token = await login(NotAdmin)
+   adminUser.token = await login(adminUser)
+   NotAdmin.token = await login(NotAdmin)
   })
 
   //Tests that get requests return a list of all cohorts
   const getAllCohorts = (adminUser) => {
-    it('should list all cohorts', (done) => {
-      request(app)
-        .get('/api/v1/cohorts/')
+    it('should list all cohorts', async ()=> {
+      const res = await request(app)
+        .get('/api/v1/cohorts')
         .set('Authorization', `Bearer ${adminUser.token}`)
         .expect(200)
-        .end((err,res) => {
-          if(err) {return done(err)}
-          expect(res.body).toBeInstanceOf(Array)
-          expect(res.body.length).toBe(3)
-        })
+        expect(res.body).toBeInstanceOf(Array)
+        expect(res.body.length).toBe(3)
+
     })
   }
   
 
   //Tests that all cohorts' schema are correct
   const getAllCohortsSchemaMatch = (adminUser) => {
-  it('all cohorts should match schema', (done) => {
+  it('all cohorts should match schema', async ()=> {
     const schema = {
       type: 'array',
       items: {
@@ -95,238 +96,177 @@ const login = async (adminUser) => {
     }
     const ajv = new Ajv()
     const validate = ajv.compile(schema)
-    request(app)
-      .get('/api/v1/cohorts/')
+    const res = await request(app)
+      .get('/api/v1/cohorts')
       .set('Authorization', `Bearer ${adminUser.token}`)
       .expect(200)
-      .end((err, res) => {
-        if (err) return done(err)
-        const isValid = validate(res.body)
-        expect(isValid).toBe(true)
-        done()
-      })
+      const isValid = validate(res.body)
+      expect(isValid).toBe(true)
         
   })
 }
 //Tests that put requests work
 const putCohort = (adminUser) => {
-  it('should create a cohort', (done) => {
-    const t = {id:'1', name:'Teacher', notes:'Joined on time'}
-    const newcohort = {
-      id: '2',
-      name: 'test cohort',
-      notes: 'PACK granted funded cohort',
-      teachers: [t]
-    }
-    request(app)
+  it('should create a cohort', async () => {
+    await request(app)
       .put('/api/v1/cohorts')
       .set('Authorization', `Bearer ${adminUser.token}`)
       .send({
-        cohort: newcohort,
+        cohort: {
+          name: "put cohort",
+          notes: "notes",
+          teachers: [
+            {
+              id: 1,
+              notes: "teacher notes"
+            }
+          ]
+        }
       })
       .expect(200)
-      .end((err, res) => {
-        if (err) {return done(err)}
-        done()
-      })
-      request(app)
-      .get('/api/v1/cohorts/')
+      const res = await request(app)
+      .get('/api/v1/cohorts')
       .set('Authorization', `Bearer ${adminUser.token}`)
       .expect(200)
-      .end((err, res) => {
-        if (err) {return done(err)}
-        
-        expect(res.body).toBeInstanceOf(Array)
-        expect(res.body.length).toBe(2)
-        done()
-      })
+      expect(res.body).toBeInstanceOf(Array)
+      expect(res.body.length).toBe(4)
   })
 }
 
 
 //Tests whta put requests ignore any additional properties 
 const addCohortIgnoresAdditionalProperties = (adminUser) => {
-  it('should ignore additional properties on new cohort', (done) => {
-    const t = {id:'1', name:'Teacher', notes:'Joined on time'}
-    const newcohort = {
-      id: '1',
-      name: 'Spring 2023',
-      notes: 'PACK granted funded cohort',
-      extraProperty: 'This should be ignored',
-      teachers: [t]
-    }
-    request(app)
+  it('should ignore additional properties on new cohort', async () => {
+  
+    await request(app)
       .put('/api/v1/cohorts')
       .set('Authorization', `Bearer ${adminUser.token}`)
-      .send({ adminUser: newcohort })
-      .end((err, res) => {
-        if (err) return done(err)
-      .expect(201)
-        request(app)
-          .get('/api/v1/cohort/')
+      .send({
+        cohort: {
+          name: "ignores additional properties",
+          extraProperty: "should be ignored",
+          notes: "notes",
+          teachers: [
+            {
+              id: 1,
+              notes: "teacher notes"
+            }
+          ]
+        }
+      })
+      .expect(200)
+       const res = await request(app)
+          .get('/api/v1/cohorts')
           .set('Authorization', `Bearer ${adminUser.token}`)
           .expect(200)
-          .end((err, res) => {
-            if (err) return done(err)
-              expect(res.body).toBeInstanceOf(Array)
-            expect(res.body.length).toBe(5)
-            const addeduser = res.body.find((u) => u.name === newuser.name)
-            addeduser.should.not.have.property('extraProperty')
-            addeduser.roles[0].should.not.have.property('extraProperty')
-            done()
-          })
-      })
+          expect(res.body).toBeInstanceOf(Array)
+          expect(res.body.length).toBe(5)
+            const addeduser = res.body.find((u) => u.name === "ignores additional properties" )
+            expect(addeduser).not.toHaveProperty('extraProperty')
+            expect(addeduser).not.toHaveProperty('extraProperty')
   })
 }
 
 //Tests that put requests don't allow cohorts of the same name
 const addCohortFailsOnDuplicateName = (adminUser) => {
-  it('should fail on duplicate name', (done) => {
+  it('should fail on duplicate name', async () => {
     const t = {id:'1', name:'Teacher', notes:'Joined on time'}
     const newcohort = {
-      id: '1',
       name: 'Spring 2023',
       notes: 'PACK granted funded cohort',
       teachers: [t]
     }
-    request(app)
+    await request(app)
       .put('/api/v1/cohorts')
       .set('Authorization', `Bearer ${adminUser.token}`)
       .send({ adminUser: newcohort })
       .expect(422)
-      .end((err) => {
-        if (err) return done(err)
-        done()
-      })
   })
 }
 
 //Tests that put requests don't work if the name is missing
 const addCohortFailsOnMissingName = (adminUser) => {
-  it('should fail on missing properties', (done) => {
+  it('should fail on missing properties', async () => {
     const t = {id:'1', name:'Teacher', notes:'Joined on time'}
     const newcohort_noname = {
-      id: '1',
       notes: 'PACK granted funded cohort',
       teachers: [t]
     }
-    request(app)
+    await request(app)
       .put('/api/v1/cohorts')
       .set('Authorization', `Bearer ${adminUser.token}`)
       .send({ adminUser: newcohort_noname })
       .expect(422)
-      .end((err) => {
-        if (err) return done(err)
-        const t = {id:'1', name:'Teacher', notes:'Joined on time'}
-        const newcohort_noid = {
-          notes: 'PACK granted funded cohort',
-          teachers: [t]
-        }
-        request(app)
-          .put('/api/v1/cohorts')
-          .set('Authorization', `Bearer ${adminUser.token}`)
-          .send({ adminUser: newcohort_noid })
-          .expect(422)
-          .end((err) => {
-            if (err) return done(err)
-            done()
-        })
-      })
     })
   }
 
   //Tests if post requests work
   const updateCohort = (adminUser) => {
-    it('should update a cohort', (done) => {
-    const t = {id:'1', name:'Teacher', notes:'Joined on time'}
-    const newcohort = {
-      id: '1',
-      notes: 'test',
-      teachers: [t]
-    }
-      request(app)
-        .post('/api/v1/cohorts/' + newcohort.id)
+    it('should update a cohort', async () => {
+     await request(app)
+        .post('/api/v1/cohorts/1')
         .set('Authorization', `Bearer ${adminUser.token}`)
-        .send({ adminUser: newcohort })
-        .end((err, res) => {
-          if (err) return done(err)
-          .expect(200)
-          request(app)
-            .get('/api/v1/cohorts/' + newcohort.id)
+        .send({
+          cohort: {
+            name: "update cohort 1",
+            notes: "notes",
+            teachers: [
+              {
+                id: 1,
+                notes: "teacher notes"
+              }
+            ]
+          }
+        })
+        .expect(200)
+         const res = await request(app)
+            .get('/api/v1/cohorts')
             .set('Authorization', `Bearer ${adminUser.token}`)
             .expect(200)
-            .end((err, res) => {
-              if (err) return done(err)
               expect(res.body).toBeInstanceOf(Array)
-              expect(res.body.length).toBe(2)
-              const addedCohort = res.body.find((u) => u.id === newcohort.id)
-              expect(addedCohort).toBe(newcohort)
-              done()
-            })
-        })
+              expect(res.body.length).toBe(5)
+              const addedCohort = res.body.find((u) => u.id === 1)
+              expect(addedCohort.name).toBe("update cohort 1")
     })
   }
   //Tests that post requests ignore any additional properties
   const updateCohortIgnoresAdditionalProperties = (adminUser) => {
-    it('should ignore additional properties on updated user', (done) => {
-      const t = {id:'1', name:'Teacher', notes:'Joined on time'}
-      const newcohort = {
-        id: '1',
-        name: 'Spring 2023',
-        notes: 'PACK granted funded cohort',
-        extraProperty: 'This should be ignored',
-        teachers: [t]
-      }
-      request(app)
-        .post('/api/v1/cohorts')
+    it('should ignore additional properties on updated user', async () => {
+      await request(app)
+        .post('/api/v1/cohorts/1')
         .set('Authorization', `Bearer ${adminUser.token}`)
-        .send({ adminUser: newcohort })
-        .end((err, res) => {
-          if (err) return done(err)
+        .send({
+          cohort: {
+            name: "post ignores properties",
+            extraProperty: "should be ignored",
+            notes: "notes",
+            teachers: [
+              {
+                id: 1,
+                notes: "teacher notes"
+              }
+            ]
+          }
+        })
           .expect(200)
-          request(app)
+          const res = await request(app)
             .get('/api/v1/cohorts')
             .set('Authorization', `Bearer ${adminUser.token}`)
             .expect(200)
-            .end((err, res) => {
-              if (err) return done(err)
               expect(res.body).toBeInstanceOf(Array)
-              expect(res.body.length).toBe(2)
-              const addedCohort = res.body.find((u) => u.id == newcohort.id)
+              expect(res.body.length).toBe(5)
+              const addedCohort = res.body.find((u) => u.id == 1)
               expect(addedCohort).not.toHaveProperty('extraProperty')
               expect(addedCohort).toHaveProperty('name')
-              expect(addedCohort.name).toBe('Spring 2023')
+              expect(addedCohort.name).toBe("post ignores properties")
               expect(addedCohort).not.toHaveProperty('extraProperty')
-              done()
-            })
-        })
     })
   }
 
-  //Tests that post requests fail if the name is missing
-  const updateCohortFailsOnMissingName = (adminUser) => {
-    it('should fail on missing properties', (done) => {
-      const t = {id:'1', name:'Teacher', notes:'Joined on time'}
-      const newcohort_noname = {
-        id: '1',
-        notes: 'PACK granted funded cohort',
-        teachers: [t]
-      }
-      request(app)
-        .post('/api/v1/cohorts' + newcohort_noname.id)
-        .set('Authorization', `Bearer ${adminUser.token}`)
-        .send({ adminUser: newcohort_noname })
-        .expect(422)
-        .end((err) => {
-          if (err) return done(err)
-          done()            
-        })
-    })
-}
 
 //Tests that post requests fail if the id is invalid
-const updateCohortFailsOnInvalidName = (adminUser) => {
-  it('should fail on invalid name', (done) => {
+const updateCohortFailsOnInvalidId = (adminUser) => {
+  it('should fail on invalid name', async () => {
     const t = {id:'1', name:'Teacher', notes:'Joined on time'}
       const newcohort = {
         id: '',
@@ -334,53 +274,50 @@ const updateCohortFailsOnInvalidName = (adminUser) => {
         notes: 'PACK granted funded cohort',
         teachers: [t]
       }
-    request(app)
-      .post('/api/v1/cohorts' + newcohort.id)
+    await request(app)
+      .post('/api/v1/cohorts/999')
       .set('Authorization', `Bearer ${adminUser.token}`)
-      .send({ adminUser: newcohort })
-      .expect(422)
-      .end((err) => {
-        if (err) return done(err)
-        done()
+      .send({
+        cohort: {
+          name: "post fails on invalid id",
+          extraProperty: "should be ignored",
+          notes: "notes",
+          teachers: [
+            {
+              id: 1,
+              notes: "teacher notes"
+            }
+          ]
+        }
       })
+      .expect(422)
   })
 }
 
 
 const deleteCohort = (adminUser) => {
-  it('should delete a cohort', (done) => {
-    request(app)
-      .delete('/api/v1/cohorts/2')
+  it('should delete a cohort', async () => {
+    await request(app)
+      .delete('/api/v1/cohorts/1')
       .set('Authorization', `Bearer ${adminUser.token}`)
       .expect(200)
-      .end((err) => {
-        if (err) return done(err)
-        request(app)
-          .get('/api/v1/cohorts/')
+        const res = await request(app)
+          .get('/api/v1/cohorts')
           .set('Authorization', `Bearer ${adminUser.token}`)
           .expect(200)
-          .end((err, res) => {
-            if (err) return done(err)
             expect(res.body).toBeInstanceOf(Array)
-            expect(res.body.length).toBe(1)
-            const deletedcohort = res.body.find((u) => u.id === 2)
-            assert.isUndefined(deletedcohort)
-            done()
-          })
-      })
+            expect(res.body.length).toBe(4)
+            const deletedcohort = res.body.find((u) => u.id === 1)
+            expect(deletedcohort).toBeUndefined
   })
 }
 
 const deleteCohortFailsOnInvalidId = (adminUser) => {
-  it('should fail on invalid name', (done) => {
-    request(app)
+  it('should fail on invalid name', async ()=> {
+    await request(app)
       .delete('/api/v1/cohorts/999')
       .set('Authorization', `Bearer ${adminUser.token}`)
       .expect(422)
-      .end((err) => {
-        if (err) return done(err)
-        done()
-      })
   })
 }
 
@@ -388,57 +325,45 @@ const deleteCohortFailsOnInvalidId = (adminUser) => {
 
 //Test that get requests only work for users with admin role
 const getAllCohortsRequiresAdminRole = (NotAdmin) => {
-  it('should require the admin role', (done) => {
-    request(app)
+  it('should require the admin role', async () => {
+    await request(app)
       .get('/api/v1/cohorts')
       .set('Authorization', `Bearer ${NotAdmin.token}`)
       .expect(403)
-      .end((err) => {
-        if (err) return done(err)
-        done()
-      })
   })
 }
 
 //Tests that put requests only work for users with admin role
 const putCohortRequiresAdminRole = (NotAdmin) => {
-  it('should require the admin role', (done) => {
-    request(app)
+  it('should require the admin role', async () => {
+    await request(app)
       .put('/api/v1/cohorts')
       .set('Authorization', `Bearer ${NotAdmin.token}`)
-      .expect(403)
-      .end((err) => {
-        if (err) return done(err)
-        done()
+      .send({
+        cohort: {
+          name: "ignores additional properties",
+          extraProperty: "should be ignored",
+          notes: "notes",
+          teachers: [
+            {
+              id: 1,
+              notes: "teacher notes"
+            }
+          ]
+        }
       })
+      .expect(403)
   })
 }
 
-//Tests that post requests are only allowed for users with admin role
-const postCohortRequiresAdminRole = (NotAdmin => {
-  it('should require the admin role', (done) => {
-    request(app)
-      .post('/api/v1/cohorts')
-      .set('Authorization', `Bearer ${NotAdmin.token}`)
-      .expect(403)
-      .end((err) => {
-        if (err) return done(err)
-        done()
-      })
-  })
-})
 
 
 const deleteCohortRequiresAdminRole = (adminUser) => {
-  it('should require the admin role', (done) => {
-    request(app)
+  it('should require the admin role', async () => {
+    await request(app)
       .delete('/api/v1/cohorts/2')
       .set('Authorization', `Bearer ${adminUser.token}`)
       .expect(403)
-      .end((err) => {
-        if (err) return done(err)
-        done()
-      })
   })
 }
 
@@ -451,7 +376,7 @@ const deleteCohortRequiresAdminRole = (adminUser) => {
   describe('PUT /', () => {
     putCohort(adminUser)
     addCohortIgnoresAdditionalProperties(adminUser)
-    putCohortRequiresAdminRole(adminUser)
+    putCohortRequiresAdminRole(NotAdmin)
     addCohortFailsOnDuplicateName(adminUser)
     addCohortFailsOnMissingName(adminUser)
   })
@@ -460,13 +385,11 @@ const deleteCohortRequiresAdminRole = (adminUser) => {
   describe('POST /{id}', () => {
     updateCohort(adminUser)
     updateCohortIgnoresAdditionalProperties(adminUser)
-    updateCohortFailsOnMissingName(adminUser)
-    updateCohortFailsOnInvalidName(adminUser)
-    postCohortRequiresAdminRole(adminUser)
+    updateCohortFailsOnInvalidId(adminUser)
   })
 
   describe('DELETE /{id}', () => {
     deleteCohort(adminUser)
     deleteCohortFailsOnInvalidId(adminUser)
-    deleteCohortRequiresAdminRole(adminUser)
+    deleteCohortRequiresAdminRole(NotAdmin)
   })

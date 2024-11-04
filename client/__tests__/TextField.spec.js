@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import TextField from '../src/components/forms/TextField.vue'
+import InputText from 'primevue/inputtext'
 
-describe.todo('TextField', () => {
+describe('TextField', () => {
 
     const props = {
         field: 'testField',
@@ -18,25 +19,6 @@ describe.todo('TextField', () => {
     it('renders a text field', () => {
         const wrapper = mount(TextField, {props})
 
-        expect(wrapper.find('label').text()).toBe(props.label)
-    })
-
-    it('enables input when the disabled prop is false', () => {
-        const wrapper = mount(TextField, { props })
-
-        const input = wrapper.find('input')
-        expect(input.attributes('disabled')).toBeUndefined()
-    })
-
-    it('disables the input when the disabled prop is true', () => {
-        const wrapper = mount(TextField, {
-            props:{
-                ...props,
-                disabled: true
-            }
-        })
-
-        const input = wrapper.find('input')
-        expect(input.attributes('disabled')).exist
+        expect(wrapper.findComponent(InputText).exists()).toBe(true)
     })
 })

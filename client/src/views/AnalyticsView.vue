@@ -7,21 +7,21 @@
               class="p-tabview-nav-content" 
               :class="{ 'p-highlight': activeTab === 'tab1' }"
             >
-              <a @click.prevent="setActiveTab('tab1')">Item 1</a>
+              <a @click.prevent="setActiveTab('tab1')">Course Enrollment</a>
             </li>
           </ul>
         </nav>
       </aside>
       <main class="p-main-content">
         <header class="mb-2">
-          <h1 class="p-title">Primary</h1>
-          <p class="p-text-secondary">Description</p>
+          <h1 class="p-title">Analytics</h1>
+          <p class="p-text-secondary">Different tables that display the data used in the report to the state of Kansas</p>
           <div class="table-container">
               <MainTable />
           </div>
         </header>
         <section v-if="activeTab === 'tab1'" class="p-section">
-          <h2 class="p-subtitle">Item 1</h2>
+          <h2 class="p-subtitle"></h2>
           <p class="p-text">
                       
           </p>

@@ -6,12 +6,12 @@ import Logger from 'js-logger'
 import api from '@/services/api'
 
 export const useEnrollmentStore = defineStore('enrollment', {
-    state: () => {
-        return {
+    state: () => ({
+        enrollments: {
             courses: [],     // list of courses
-            numStudents: []  // students enrolled in each course
+            teachers: []  // students enrolled in each course
         }
-    },
+    }),
     getters: {
         /**
          * 
@@ -22,15 +22,22 @@ export const useEnrollmentStore = defineStore('enrollment', {
          * @param {State} state 
          * @returns All courses and the number of students enrolled.
          */
-        getCoursesByCohort: (state) => (cohort) => {
-            return state.courses
-            .filter(course => course.cohort === cohort)
-            .map(course => {
+        getAllCourses: (state) => {
+            return state.enrollments.courses.map(course => {
                 return {
-                ...course,
-                numStudents: state.numStudents[course.id] || 0
+                    ...course,
+                    numStudents: course.teachers.length
                 }
             })
+        }
+    },
+    actions: {
+        async hydrate() {
+            Logger.info('enrollment:hydrate')
+            await api.get('api/v1/courses').then((response) => {
+                this.enrollments.courses = response.data
+            })
+
         }
     }
 })

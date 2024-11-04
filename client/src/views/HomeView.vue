@@ -123,6 +123,7 @@ onMounted(() => {
 
 .p-tabview-nav-content {
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .p-tabview-nav-content a {

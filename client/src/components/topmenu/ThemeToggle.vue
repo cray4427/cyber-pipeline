@@ -9,33 +9,34 @@ const PrimeVue = usePrimeVue()
 import Logger from 'js-logger'
 
 // Theme reference
-const themeDark = ref('light-theme')
+const themeDark = ref(false)
 
 /**
- * Get theme from local storage
- */
-const getTheme = () => {
-  return localStorage.getItem('user-theme')
-}
-
-/**
- * Get user's media preference
- */
-const getMediaPreference = () => {
-  const hasDarkPreference = window.matchMedia('(prefers-color-scheme: dark)').matches
-  if (hasDarkPreference) {
-    return 'dark-theme'
-  } else {
-    return 'light-theme'
-  }
-}
-
-/**
- * Set theme when component is mounted
+ * Determine the dark mode status on component mount.  
+ * It should be true if any of the following cases:
+ * - The user set a browser preference for dark color schemes
+ * - The user previously toggled dark mode in this app, setting a value of 'dark' in localStorage
+ * Note that it is important that if a preference for light is set in local storage, it overrides
+ * the browser color scheme preference!
  */
 onMounted(() => {
-  themeDark.value = getTheme() || getMediaPreference()
-  updateTheme()
+  // check for preference in localStorage
+  switch(localStorage.getItem('user-theme'))
+  {
+    case 'dark': 
+      themeDark.value = true;
+      break;
+    case 'light':
+      themeDark.value = false;
+      break;
+    default:
+      // if we fall through, check for preference in matchMedia
+      // Also need to account for the lack of the matchMedia API, as not all browsers support it
+      if(window.matchMedia) {
+        // check for media preference for dark color schemes
+        if(window.matchMedia('(prefers-color-scheme: dark)').matches) themeDark.value = true;
+      }
+  }  
 })
 
 /**
@@ -44,18 +45,14 @@ onMounted(() => {
 const updateTheme = () => {
   Logger.info('Update theme to ' + themeDark.value)
   document.documentElement.classList.toggle('app-dark')
-  localStorage.setItem('user-theme', themeDark.value)
+  localStorage.setItem('user-theme', themeDark.value ? 'dark' : 'light')
 }
 
 /**
  * Toggle theme value and trigger update
  */
 const toggleDarkMode = () => {
-  if (themeDark.value == 'dark-theme') {
-    themeDark.value = 'light-theme'
-  } else {
-    themeDark.value = 'dark-theme'
-  }
+  themeDark.value = !themeDark.value
   updateTheme()
 }
 </script>
@@ -68,14 +65,14 @@ const toggleDarkMode = () => {
         @click="toggleDarkMode()"
       >
         <span
-          v-if="themeDark == 'light-theme'"
-          class="pi pi-moon"
-          v-tooltip.bottom="'Toggle Dark Mode'"
+          v-if="themeDark"
+          class="pi pi-sun"
+          v-tooltip.bottom="'Toggle Light Mode'"
         />
         <span
           v-else
-          class="pi pi-sun"
-          v-tooltip.bottom="'Toggle Light Mode'"
+          class="pi pi-moon"
+          v-tooltip.bottom="'Toggle Dark Mode'"
         />
       </a>
     </div>

@@ -9,101 +9,118 @@ export async function seed (knex) {
 
 
   //#region INITIALIZE DATA -- FIELDS CREATION
-    //#region Users
-    const initialUsers = [
-      { id: 1, eid: "test-admin", name: 'Test Administrator', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-      { id: 2, eid: "russfeld", name: 'Russell Feldhausen', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-      { id: 3, eid: "test-student", name: 'Test Student', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-      { id: 4, eid: "weeser", name: 'Joshua Weese', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-      { id: 5, eid: "nhbean", name: 'Nathan Bean', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-    ]
-    const firstUsersLength = initialUsers.length+1
-    //#endregion
-  
-    //#region Roles
-    const initialRoles = [
-      { id: 1, name: 'admin', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-      { id: 2, name: 'user', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' }
-    ]
-    //#endregion
-
-    //#region User Roles
-    const initialUserRoles = [
-      { user_id: 1, role_id: 1, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-      { user_id: 2, role_id: 1, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-      { user_id: 3, role_id: 2, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-      { user_id: 4, role_id: 1, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-      { user_id: 5, role_id: 1, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
-    ]
-    //#endregion
-    //#region Districts
-    const initialDistricts = [
-      { id: 1, usd: '380', name: 'Vermillion', url: 'https://www.usd380.com/', locale: 43, notes: 'Vermillion notes', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin', },
-      { id: 2, usd: '501', name: 'Topeka', url: 'https://www.topekapublicschools.net/', locale: 12, notes: 'Topeka notes', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin', },
-      { id: 3, usd: '233', name: 'Olathe', url: 'https://www.olatheschools.org/', locale: 21, notes: 'Olathe notes', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin', },
-      { id: 4, usd: '259', name: 'Wichita', url: 'https://www.usd259.org/', locale: 11, notes: 'Wichita notes', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin', },
-    ]
-    //#endregion { id: 1, usd: '}
+  //#region Users
+  const initialUsers = [
+    { id: 1, eid: "test-admin", name: 'Test Administrator', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+    { id: 2, eid: "russfeld", name: 'Russell Feldhausen', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+    { id: 3, eid: "test-student", name: 'Test Student', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+    { id: 4, eid: "weeser", name: 'Joshua Weese', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+    { id: 5, eid: "nhbean", name: 'Nathan Bean', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+  ]
+  const firstUsersLength = initialUsers.length+1
+  //#endregion
+  //#region Roles
+  const initialRoles = [
+    { id: 1, name: 'admin', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+    { id: 2, name: 'user', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' }
+  ]
+  //#endregion
+  //#region User Roles
+  const initialUserRoles = [
+    { user_id: 1, role_id: 1, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+    { user_id: 2, role_id: 1, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+    { user_id: 3, role_id: 2, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+    { user_id: 4, role_id: 1, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+    { user_id: 5, role_id: 1, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
+  ]
+  //#endregion
+  //#region Districts
+  const initialDistricts = [
+    { id: 1, usd: '380', name: 'Vermillion', url: 'https://www.usd380.com/', locale: 43, notes: 'Vermillion notes', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin', },
+    { id: 2, usd: '501', name: 'Topeka', url: 'https://www.topekapublicschools.net/', locale: 12, notes: 'Topeka notes', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin', },
+    { id: 3, usd: '233', name: 'Olathe', url: 'https://www.olatheschools.org/', locale: 21, notes: 'Olathe notes', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin', },
+    { id: 4, usd: '259', name: 'Wichita', url: 'https://www.usd259.org/', locale: 11, notes: 'Wichita notes', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin', },
+  ]
+  //#endregion { id: 1, usd: '}
   //#endregion
 
 
   //#region ADD TESTING DATA -- FIELDS CREATION
-  const numUsers = 300      // MAX --> 200
+  const numUsers = 165      // MAX --> 200
   const numDistricts = 10   // MAX --> 
 
-    //#region Users
+  //#region Users
 
-    const fakeFN = [
-      "James", "Mary", "Michael", "Patricia", "Robert", "Jennifer", "John", "Linda", "David", "Elizabeth", "William", "Barbara", 
-      "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen", "Christopher", "Nancy", "Daniel", "Lisa", 
-      "Matthew", "Betty", "Anthony", "Margaret", "Mark", "Sandra", "Paul", "Ashley", "Steven", "Dorothy", "Andrew", "Kimberly", 
-      "Kenneth", "Emily", "George", "Donna", "Joshua", "Michelle", "Kevin", "Carol", "Brian", "Amanda", "Edward", "Melissa", 
-      "Ronald", "Deborah", "Timothy", "Stephanie", "Jason", "Laura", "Larry", "Rebecca", "Frank", "Sharon", "Eric", "Cynthia", 
-      "Raymond", "Kathleen", "Gerald", "Virginia", "Bobby", "Helen", "Walter", "Debra", "Patrick", "Marie", "Peter", "Harry", 
-      "Teresa", "Douglas", "Henry", "Gloria", "Carl", "Kelly", "Arthur", "Judy", "Ryan", "Marilyn", "Roger", "Catherine", "Joe", 
-      "Christine", "Albert", "Janet", "Jonathan", "Frances", "Justin", "Ann", "Terry", "Jacqueline", "Gary", "Ruth", "Brandon", 
-      "Alice", "Billy", "Joan", "Bruce", "Theresa", "Willie", "Rose", "Jordan", "Aaron", "Kathryn", "Adam", "Louise", "Zachary", 
-      "Sara", "Lawrence", "Anne", "Nicholas", "Roy", "Wanda", "Benjamin", "Bonnie", "Samuel", "Julia", "Ruby", "Norma", "Dennis", 
-      "Paula", "Diane", "Wayne", "Heather", "Jesse", "Eva", "Alan", "Debbie", "Phillip", "April", "Leslie", "Johnny", "Lillian", 
-      "Victor", "Joanne", "Martin", "Emma", "Lori", "Alexander", "Carrie", "Tina", "Martha", "Shirley", "Jerry", "Kathy", "Jeremy", 
-      "Austin", "Pauline", "Chris", "Ethel", "Bryan", "Lorraine", "Lynn", "Loretta", "Marion", "Katie", "Dana", "Maureen", "Geraldine",
-      "Tracy", "Peggy", "Gladys", "Holly", "Jo", "Eleanor", "Janice", "Sherry", "Doris", "Olivia", "Florence", "Jean", "Carla",
-      "Vicki", "Tanya", "Regina", "Charlene", "Vivian", "Sylvia", "Marjorie", "Hilda", "Jill", "Kristin", "Veronica", "Jennie",
-      "Nora", "Margie", "Nina", "Cassandra", "Leah", "Penny", "Kay", "Priscilla", "Naomi", "Carole", "Brandy", "Olga", "Billie",
-    ]
+  const fakeFN = [
+    "James", "Mary", "Michael", "Patricia", "Robert", "Jennifer", "John", "Linda", "David", "Elizabeth", "William", "Barbara", 
+    "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen", "Christopher", "Nancy", "Daniel", "Lisa", 
+    "Matthew", "Betty", "Anthony", "Margaret", "Mark", "Sandra", "Paul", "Ashley", "Steven", "Dorothy", "Andrew", "Kimberly", 
+    "Kenneth", "Emily", "George", "Donna", "Joshua", "Michelle", "Kevin", "Carol", "Brian", "Amanda", "Edward", "Melissa", 
+    "Ronald", "Deborah", "Timothy", "Stephanie", "Jason", "Laura", "Larry", "Rebecca", "Frank", "Sharon", "Eric", "Cynthia", 
+    "Raymond", "Kathleen", "Gerald", "Virginia", "Bobby", "Helen", "Walter", "Debra", "Patrick", "Marie", "Peter", "Harry", 
+    "Teresa", "Douglas", "Henry", "Gloria", "Carl", "Kelly", "Arthur", "Judy", "Ryan", "Marilyn", "Roger", "Catherine", "Joe", 
+    "Christine", "Albert", "Janet", "Jonathan", "Frances", "Justin", "Ann", "Terry", "Jacqueline", "Gary", "Ruth", "Brandon", 
+    "Alice", "Billy", "Joan", "Bruce", "Theresa", "Willie", "Rose", "Jordan", "Aaron", "Kathryn", "Adam", "Louise", "Zachary", 
+    "Sara", "Lawrence", "Anne", "Nicholas", "Roy", "Wanda", "Benjamin", "Bonnie", "Samuel", "Julia", "Ruby", "Norma", "Dennis", 
+    "Paula", "Diane", "Wayne", "Heather", "Jesse", "Eva", "Alan", "Debbie", "Phillip", "April", "Leslie", "Johnny", "Lillian", 
+    "Victor", "Joanne", "Martin", "Emma", "Lori", "Alexander", "Carrie", "Tina", "Martha", "Shirley", "Jerry", "Kathy", "Jeremy", 
+    "Austin", "Pauline", "Chris", "Ethel", "Bryan", "Lorraine", "Lynn", "Loretta", "Marion", "Katie", "Dana", "Maureen", "Geraldine",
+    "Tracy", "Peggy", "Gladys", "Holly", "Jo", "Eleanor", "Janice", "Sherry", "Doris", "Olivia", "Florence", "Jean", "Carla",
+    "Vicki", "Tanya", "Regina", "Charlene", "Vivian", "Sylvia", "Marjorie", "Hilda", "Jill", "Kristin", "Veronica", "Jennie",
+    "Nora", "Margie", "Nina", "Cassandra", "Leah", "Penny", "Kay", "Priscilla", "Naomi", "Carole", "Brandy", "Olga", "Billie",
+  ]
 
-    const fakeLN = [
-      "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Robinson", "Clark", "Rodriguez", "Lewis", "Lee",
-      "Walker", "Hall", "Allen", "Young", "Hernandez", "King", "Wright", "Lopez", "Hill", "Scott", "Green", "Adams", "Baker",
-      "Gonzalez", "Nelson", "Carter", "Mitchell", "Perez", "Roberts", "Turner", "Phillips", "Campbell", "Parker", "Evans", "Edwards",
-      "Collins", "Stewart", "Sanchez", "Morris", "Rogers", "Reed", "Cook", "Morgan", "Bell", "Murphy", "Bailey", "Rivera", "Cooper",
-      "Richardson", "Cox", "Howard", "Ward", "Torres", "Peterson", "Gray", "Ramirez", "Watson", "Brooks", "Kelly", "Sanders",
-      "Price", "Bennett", "Wood", "Barnes", "Ross", "Henderson", "Coleman", "Jenkins", "Perry", "Powell", "Long", "Patterson", "Hughes",
-      "Flores", "Washington", "Butler", "Simmons", "Foster", "Bryant", "Alexander", "Russell", "Griffin", "Diaz", "Hayes",
-      "Myers", "Ford", "Hamilton", "Graham", "Sullivan", "Wallace", "Woods", "Cole", "West", "Jordan", "Owens", "Reynolds", "Fisher",
-      "Ellis", "Harrison", "Gibson", "Mcdonald", "Cruz", "Marshall", "Ortiz", "Gomez", "Murray", "Freeman", "Wells", "Webb", "Simpson",
-      "Stevens", "Tucker", "Porter", "Hunter", "Hicks", "Crawford", "Henry", "Boyd", "Mason", "Morales", "Kennedy", "Warren", "Dixon",
-      "Ramos", "Reyes", "Burns", "Gordon", "Shaw", "Holmes", "Rice", "Robertson", "Hunt", "Black", "Daniels", "Palmer", "Mills", "Nichols",
-      "Grant", "Knight", "Ferguson", "Rose", "Stone", "Hawkins", "Dunn", "Perkins", "Hudson", "Spencer", "Gardner", "Stephens", "Payne",
-      "Pierce", "Berry", "Matthews", "Arnold", "Wagner", "Willis", "Ray", "Watkins", "Olson", "Carroll", "Duncan", "Snyder", "Hart",
-      "Cunningham", "Bradley", "Lane", "Andrews", "Ruiz", "Harper", "Fox", "Riley", "Armstrong", "Carpenter", "Weaver", "Greene", "Lawrence",
-      "Elliott", "Chavez", "Sims", "Austin", "Peters", "Kelley", "Franklin", "Lawson", "Fields", "Gutierrez", "Ryan", "Schmidt", "Carr",
-      "Vasquez", "Castillo", "Wheeler", "Chapman", "Oliver", "Montgomery", "Richards", "Williamson", "Johnston"
-    ]
+  const fakeLN = [
+    "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Robinson", "Clark", "Rodriguez", "Lewis", "Lee",
+    "Walker", "Hall", "Allen", "Young", "Hernandez", "King", "Wright", "Lopez", "Hill", "Scott", "Green", "Adams", "Baker",
+    "Gonzalez", "Nelson", "Carter", "Mitchell", "Perez", "Roberts", "Turner", "Phillips", "Campbell", "Parker", "Evans", "Edwards",
+    "Collins", "Stewart", "Sanchez", "Morris", "Rogers", "Reed", "Cook", "Morgan", "Bell", "Murphy", "Bailey", "Rivera", "Cooper",
+    "Richardson", "Cox", "Howard", "Ward", "Torres", "Peterson", "Gray", "Ramirez", "Watson", "Brooks", "Kelly", "Sanders",
+    "Price", "Bennett", "Wood", "Barnes", "Ross", "Henderson", "Coleman", "Jenkins", "Perry", "Powell", "Long", "Patterson", "Hughes",
+    "Flores", "Washington", "Butler", "Simmons", "Foster", "Bryant", "Alexander", "Russell", "Griffin", "Diaz", "Hayes",
+    "Myers", "Ford", "Hamilton", "Graham", "Sullivan", "Wallace", "Woods", "Cole", "West", "Jordan", "Owens", "Reynolds", "Fisher",
+    "Ellis", "Harrison", "Gibson", "Mcdonald", "Cruz", "Marshall", "Ortiz", "Gomez", "Murray", "Freeman", "Wells", "Webb", "Simpson",
+    "Stevens", "Tucker", "Porter", "Hunter", "Hicks", "Crawford", "Henry", "Boyd", "Mason", "Morales", "Kennedy", "Warren", "Dixon",
+    "Ramos", "Reyes", "Burns", "Gordon", "Shaw", "Holmes", "Rice", "Robertson", "Hunt", "Black", "Daniels", "Palmer", "Mills", "Nichols",
+    "Grant", "Knight", "Ferguson", "Rose", "Stone", "Hawkins", "Dunn", "Perkins", "Hudson", "Spencer", "Gardner", "Stephens", "Payne",
+    "Pierce", "Berry", "Matthews", "Arnold", "Wagner", "Willis", "Ray", "Watkins", "Olson", "Carroll", "Duncan", "Snyder", "Hart",
+    "Cunningham", "Bradley", "Lane", "Andrews", "Ruiz", "Harper", "Fox", "Riley", "Armstrong", "Carpenter", "Weaver", "Greene", "Lawrence",
+    "Elliott", "Chavez", "Sims", "Austin", "Peters", "Kelley", "Franklin", "Lawson", "Fields", "Gutierrez", "Ryan", "Schmidt", "Carr",
+    "Vasquez", "Castillo", "Wheeler", "Chapman", "Oliver", "Montgomery", "Richards", "Williamson", "Johnston"
+  ]
 
-    function getName(index) {
-      const fN = fakeFN[index] 
-      const lN = fakeLN[index]
-      return [fN, lN]
-    }
+  function getName(index) {
+    const fN = fakeFN[index] 
+    const lN = fakeLN[index]
+    return [fN, lN]
+  }
 
-    for (let i=0; i < Math.min(numUsers, fakeFN.length, fakeLN.length); i++) {
-      const local_name = getName(i)
-      const local_eid = ['fake', local_name[1], i.toString()].join('-')
-      initialUsers.push({ id: i+firstUsersLength, eid: local_eid, name: `${local_name.join(' ')}`, created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' })
-    }
-    //#endregion
-    //#region Districts
+  for (let i=0; i < Math.min(numUsers, fakeFN.length, fakeLN.length); i++) {
+    const local_name = getName(i)
+    const local_eid = [local_name[1], i.toString()].join('-')
+    initialUsers.push(
+    { 
+      id: i+firstUsersLength, 
+      eid: local_eid, 
+      name: `${local_name.join(' ')}`, 
+      created_at: now, updated_at: now, 
+      created_by: 'test-admin', updated_by: 'test-admin' })
+  }
+  //#endregion
+  //#region User Roles
+  for (let i=0; i < Math.min(numUsers, fakeFN.length, fakeLN.length); i++) {
+    const num = i+firstUsersLength
+    const local_user_id = num.toString();
+    initialUserRoles.push(
+    { 
+      user_id: local_user_id, 
+      role_id: '2', 
+      created_at: now, updated_at: now, 
+      created_by: 'test-admin', updated_by: 'test-admin' 
+    })
+  }
+  //#endregion
+  //#region Districts
     const usdNames = [
       "Erie-Galesburg", "Cimarron-Ensign", "Cheylin", "Rawlins County", "Western Plains", "Hoxie", 
       "Rock Hills", "Washington County Schools", "Republic County", "Thunder Ridge Schools", 
@@ -204,35 +221,59 @@ export async function seed (knex) {
   await knex('roles').insert(initialRoles)
   // User Roles
   await knex('user_roles').del()
-  await knex('user_roles').insert([
-    {
-      user_id: '1',
-      role_id: '1',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      user_id: '2',
-      role_id: '1',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      user_id: '3',
-      role_id: '2',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    }, 
-  ])
+  await knex('user_roles').insert(initialUserRoles)
   // Districts
   await knex('districts').del()
-  await knex('districts').insert(initialDistricts)
+  await knex('districts').insert([
+    {
+      id: 1,
+      usd: '380',
+      name: 'Vermillion',
+      url: 'https://www.usd380.com/',
+      locale: 43,
+      notes: 'Vermillion notes',
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    },
+    {
+      id: 2,
+      usd: '501',
+      name: 'Topeka',
+      url: 'https://www.topekapublicschools.net/',
+      locale: 12,
+      notes: 'Topeka notes',
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    },
+    {
+      id: 3,
+      usd: '233',
+      name: 'Olathe',
+      url: 'https://www.olatheschools.org/',
+      locale: 21,
+      notes: 'Olathe notes',
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    },
+    {
+      id: 4,
+      usd: '259',
+      name: 'Wichita',
+      url: 'https://www.usd259.org/',
+      locale: 11,
+      notes: 'Wichita notes',
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    },
+  ])
   // Teachers
   await knex('teachers').del()
   await knex('teachers').insert([

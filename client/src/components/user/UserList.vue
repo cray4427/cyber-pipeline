@@ -188,6 +188,8 @@ const exportFunction = (row) => {
       v-model:filters="filters"
       :globalFilterFields="['name', 'eid']"
       :exportFunction="exportFunction"
+      scrollable
+      scrollHeight="800px"
     >
       <template #header>
         <Toolbar
@@ -227,11 +229,12 @@ const exportFunction = (row) => {
           <p>No Users Found</p>
         </div>
       </template>
-      <div class="sticky-top">
+      <div>
         <Column
           field="eid"
           sortable
           header="eID"
+          headerStyle="position: sticky; top: 0; z-index: 1;"
         ></Column>
         <Column
           field="name"
@@ -338,7 +341,9 @@ const exportFunction = (row) => {
   padding: 0px !important;
 }
 
-.sticky-top {
+:deep(.p-datatable-thead > tr > th) {
   position: sticky;
+  top: 0;
+  z-index: 1; /* Ensure the header stays above the body rows */
 }
 </style>

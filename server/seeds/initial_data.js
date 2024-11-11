@@ -15,7 +15,7 @@ export async function seed (knex) {
 
   //#region ADD TESTING DATA -- FIELDS CREATION
   const numUsers = 20      // MAX --> 200
-  const numDistricts = 20   // MAX --> 
+  const numDistricts = 400   // MAX --> 
   console.log("Seeding... ")
   //#region Users
   const initialUsers = [

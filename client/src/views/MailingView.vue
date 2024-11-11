@@ -1,6 +1,6 @@
 <template>
   <div class="mailing-view">
-    <h1 data-testid="Main-Heading">Send Email</h1>
+    <h1 id="main-heading">Send Email</h1>
     <form @submit.prevent="sendEmail">
       <TextField
         label="Recipients"

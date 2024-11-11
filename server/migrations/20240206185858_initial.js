@@ -53,25 +53,6 @@ export async function up(knex) {
     });
   }
 
-  // Create 'districts' table
-  if (!(await knex.schema.hasTable('districts'))) {
-    console.log('Creating table: districts');
-    await knex.schema.createTable('districts', table => {
-      table.increments('id');
-      table.string('name', 255).unique().notNullable();
-      table.integer('usd').unsigned().nullable();
-      table.string('url', 255);
-      table.boolean('rural').defaultTo(false);
-      table.boolean('urban').defaultTo(false);
-      table.boolean('suburban').defaultTo(false);
-      table.boolean('town').defaultTo(false);
-      table.text('notes').nullable();
-      table.timestamps(true, true);
-      table.string('created_by', 20);
-      table.string('updated_by', 20);
-    });
-  }
-
   // Create 'all_districts' table
   if (!(await knex.schema.hasTable('all_districts'))) {
     console.log('Creating table: all_districts');
@@ -84,6 +65,26 @@ export async function up(knex) {
       table.boolean('urban').defaultTo(false);
       table.boolean('suburban').defaultTo(false);
       table.boolean('town').defaultTo(false);
+      table.timestamps(true, true);
+      table.string('created_by', 20);
+      table.string('updated_by', 20);
+    });
+  }
+
+  // Create 'districts' table
+  if (!(await knex.schema.hasTable('districts'))) {
+    console.log('Creating table: districts');
+    await knex.schema.createTable('districts', table => {
+      table
+        .increments('id')
+        .string('name', 255).unique().notNullable()
+        .integer('usd').unsigned().nullable()
+        .string('url', 255)
+        .boolean('rural').defaultTo(false)
+        .boolean('urban').defaultTo(false)
+        .boolean('suburban').defaultTo(false)
+        .boolean('town').defaultTo(false);
+      table.text('notes').nullable();
       table.timestamps(true, true);
       table.string('created_by', 20);
       table.string('updated_by', 20);
@@ -226,6 +227,8 @@ export async function up(knex) {
         .integer
     });
   }
+
+  // Create emails table
   /**
   // Create emails table
   if(!(await knex.schema.hasTable('emails'))) {

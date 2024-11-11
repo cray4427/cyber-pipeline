@@ -266,7 +266,7 @@ export async function seed (knex) {
     });
   }
   //#endregion
-
+  //#region Districts
   for (let i = 0; i < Math.min(numDistricts, usdNumbers.length); i++) {
     const local_usd2 = initialAllDistricts[i].usd;
     const local_name2 = initialAllDistricts[i].name;
@@ -291,8 +291,29 @@ export async function seed (knex) {
       })
     }
   }
+  //#endregion
+  //#region Teachers
 
-  
+  //#endregion
+  //#region Teacher Districts
+
+  //#endregion
+  //#region Cohorts
+
+  //#endregion
+  //#region Courses
+
+  //#endregion
+  //#region Teacher Cohorts
+
+  //#endregion 
+  //#region Teacher Courses
+
+  //#endregion
+  //#region User Teachers
+
+  //#endregion
+
   
   //#endregion
   //#endregion

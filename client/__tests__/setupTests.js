@@ -6,6 +6,7 @@ import ToastService from 'primevue/toastservice';
 import Tooltip from 'primevue/tooltip';
 import FocusTrap from 'primevue/focustrap';
 import { vi } from 'vitest'
+import 'vitest-localstorage-mock'
 
 // Install PrimeVue globally in tests
 config.global.plugins = [PrimeVue, ConfirmationService, ToastService];

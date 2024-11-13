@@ -7,6 +7,7 @@
     "dev": "vite --host 0.0.0.0 --port 3001",
     "build": "vite build",
     "preview": "vite preview",
+    "test:theme": "vitest theme",
     "test:unit": "vitest",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
@@ -27,8 +28,6 @@
     "primeicons": "^6.0.1",
     "primevue": "^4.0.7",
     "unplugin-vue-components": "^0.27.4",
-    "vite": "^5.4.3",
-    "vite-plugin-vue-devtools": "^7.4.4",
     "vue": "^3.5.3",
     "vue-router": "^4.4.3"
   },
@@ -45,6 +44,9 @@
     "eslint-plugin-vue": "^9.28.0",
     "jsdom": "^25.0.0",
     "prettier": "^3.3.3",
-    "vitest": "^2.0.5"
+    "vite": "^5.4.3",
+    "vite-plugin-vue-devtools": "^7.4.4",
+    "vitest": "^2.0.5",
+    "vitest-localstorage-mock": "^0.1.2"
   }
 }

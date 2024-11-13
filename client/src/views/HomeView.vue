@@ -28,33 +28,42 @@
       <header class="mb-2">
         <h1 class="p-title">Kansas State University: Cyber Pipeline Program</h1>
         <p class="p-text-secondary">Making quality computer science education available to all high school students at little or no cost.</p>
-        <div v-if="svgUrl" class="map-container">
-          <img id="svg-image" :src="svgUrl" alt="Failed to load map"/>
+        
+        <div class="p-map-and-text-container">
+          <div class="p-map-container">
+            <div v-if="svgUrl" class="map-container">
+              <img id="svg-image" :src="svgUrl" alt="Failed to load map" />
+            </div>
+          </div>
+          <div class="p-text-container">
+            <section v-if="activeTab === 'curriculum'" class="p-section">
+              <h2 class="p-subtitle">Curriculum</h2>
+              <p class="p-text">
+                The Cyber Pipeline Curriculum contains several courses from K-State's Computational Core that have been aligned with AP curriculum standards. 
+                These are the same courses we use in our Computer Science Certificate and Integrated Computer Science degree programs, 
+                so students are getting the real college experience!
+              </p>
+            </section>
+            <section v-if="activeTab === 'online-instruction'" class="p-section">
+              <h2 class="p-subtitle">Online Instruction</h2>
+              <p class="p-text">
+                Innovative online instruction that includes video, text, and automatically graded hands-on exercises and projects. The curriculum is designed to use lectures and text from K-State faculty, as well as in-class activities and examples led by high school teachers.
+              </p>
+            </section>
+            <section v-if="activeTab === 'teacher-training'" class="p-section">
+              <h2 class="p-subtitle">Teacher Training</h2>
+              <p class="p-text">
+                The Cyber Pipeline program includes an engaging and robust professional development program designed to prepare a teacher with no background in computer science to teach the CC 110 and/or CC 210 courses in under a year. 
+                The training is delivered asynchronously online, allowing you to fit it into your schedule. 
+                Additionally, there is a synchronous (but also available as a recording) online seminar series held the first Friday of each month. 
+                Finally, teachers engaging in the program have continuous access to mentoring by Computer Science and Pedagogy experts drawn from K-State faculty through instant messaging, email, and video collaboration.
+              </p>
+            </section>
+          </div>
         </div>
-      </header>
-      <section v-if="activeTab === 'curriculum'" class="p-section">
-        <h2 class="p-subtitle">Curriculum</h2>
-        <p class="p-text">
-          The Cyber Pipeline Curriculum contains several courses from K-State's Computational Core that have been aligned with AP curriculum standards. 
-          These are the same courses we use in our Computer Science Certificate and Integrated Computer Science degree programs, 
-          so students are getting the real college experience!
-        </p>
-      </section>
-      <section v-if="activeTab === 'online-instruction'" class="p-section">
-        <h2 class="p-subtitle">Online Instruction</h2>
-        <p class="p-text">
-          Innovative online instruction that includes video, text, and automatically graded hands-on exercises and projects. The curriculum is designed to use lectures and text from K-State faculty, as well as in-class activities and examples led by high school teachers.
-        </p>
-      </section>
-      <section v-if="activeTab === 'teacher-training'" class="p-section">
-        <h2 class="p-subtitle">Teacher Training</h2>
-        <p class="p-text">
-          The Cyber Pipeline program includes an engaging and robust professional development program designed to prepare a teacher with no background in computer science to teach the CC 110 and/or CC 210 courses in under a year. 
-          The training is delivered asynchronously online, allowing you to fit it into your schedule. 
-          Additionally, there is a synchronous (but also available as a recording) online seminar series held the first Friday of each month. 
-          Finally, teachers engaging in the program have continuous access to mentoring by Computer Science and Pedagogy experts drawn from K-State faculty through instant messaging, email, and video collaboration.
-        </p>
-      </section>
+
+        
+     </header>
     </main>
   </div>
 </template>
@@ -135,6 +144,16 @@ onMounted(() => {
   text-decoration: underline;
 }
 
+.p-map-and-text-container {
+  display: flex;  
+  flex-direction: column; /* Stacks map on top of text */
+}
+
+.p-map-container,
+.p-text-container {
+  width: 50%; /* Full width when stacked */
+}
+
 .p-highlight {
   font-weight: bold;
 }
@@ -161,16 +180,5 @@ onMounted(() => {
 .p-text {
   font-size: 1.2em;
   line-height: 1.6;
-}
-
-.map-container{
-  width: 700px;
-  height: 400px;
-  
-}
-
-.map-container iframe{
-  width: 100%;
-  height: 100%;
 }
 </style>

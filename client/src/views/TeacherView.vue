@@ -1,5 +1,5 @@
 <script setup>
-import TeacherList from '@/components/teacher/TeacherList.vue'
+import TeacherList from '@/features/TeacherList.vue'
 </script>
 
 <template>

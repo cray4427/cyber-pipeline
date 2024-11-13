@@ -22,7 +22,7 @@ const getTheme = () => {
  * Get user's media preference
  */
 const getMediaPreference = () => {
-  const hasDarkPreference = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const hasDarkPreference = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)').matches : false
   if (hasDarkPreference) {
     return 'dark-theme'
   } else {

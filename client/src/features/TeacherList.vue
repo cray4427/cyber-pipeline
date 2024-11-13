@@ -30,6 +30,7 @@ import DropDownField from '@/components/forms/DropDownField.vue'
 import TextField from '@/components/forms/TextField.vue'
 import BooleanField from '@/components/forms/BooleanField.vue'
 import TextAreaField from '@/components/forms/TextAreaField.vue'
+import TeacherColumn from '@/components/teacher/TeacherColumn.vue';
 
 // Token
 import { useTokenStore } from '@/stores/Token'
@@ -317,122 +318,30 @@ const exportFunction = (row) => {
         sortable
         header="WID"
       ></Column>
-      <Column
+      <TeacherColumn
         v-if="is_admin"
-        header="Status"
-        field="status"
-        sortable
-      >
-        <template #body="slotProps">
-          <Tag
-            :value="statuses[slotProps.data.status].label"
-            :severity="statuses[slotProps.data.status].severity"
-            :icon="statuses[slotProps.data.status].icon"
-            v-if="statuses[slotProps.data.status].hidden != 'true'"
-            class="m-1"
-          />
-        </template>
-        <template #filter="{ filterModel, filterCallback }">
-          <MultiSelect
-            v-model="filterModel.value"
-            @change="filterCallback()"
-            :options="statuses"
-            optionLabel="label"
-            optionValue="id"
-            placeholder="Any"
-            class="p-column-filter"
-            :maxSelectedLabels="2"
-          >
-          </MultiSelect>
-        </template>
-      </Column>
-      <Column
+        :header="'Status'"
+        :field="'status'"
+        :statuses="statuses"
+      />
+      <TeacherColumn
         v-if="is_admin"
-        header="PD"
-        field="pd_status"
-        sortable
-      >
-        <template #body="slotProps">
-          <Tag
-            :value="statuses[slotProps.data.pd_status].label"
-            :severity="statuses[slotProps.data.pd_status].severity"
-            :icon="statuses[slotProps.data.pd_status].icon"
-            v-if="statuses[slotProps.data.pd_status].hidden != 'true'"
-            class="m-1"
-          />
-        </template>
-        <template #filter="{ filterModel, filterCallback }">
-          <MultiSelect
-            v-model="filterModel.value"
-            @change="filterCallback()"
-            :options="statuses"
-            optionLabel="label"
-            optionValue="id"
-            placeholder="Any"
-            class="p-column-filter"
-            :maxSelectedLabels="2"
-          >
-          </MultiSelect>
-        </template>
-      </Column>
-      <Column
+        :header="'PD'"
+        :field="'pd_status'"
+        :statuses="statuses"
+      />
+      <TeacherColumn
         v-if="is_admin"
-        header="Cert"
-        field="cert_status"
-        sortable
-      >
-        <template #body="slotProps">
-          <Tag
-            :value="statuses[slotProps.data.cert_status].label"
-            :severity="statuses[slotProps.data.cert_status].severity"
-            :icon="statuses[slotProps.data.cert_status].icon"
-            v-if="statuses[slotProps.data.cert_status].hidden != 'true'"
-            class="m-1"
-          />
-        </template>
-        <template #filter="{ filterModel, filterCallback }">
-          <MultiSelect
-            v-model="filterModel.value"
-            @change="filterCallback()"
-            :options="statuses"
-            optionLabel="label"
-            optionValue="id"
-            placeholder="Any"
-            class="p-column-filter"
-            :maxSelectedLabels="2"
-          >
-          </MultiSelect>
-        </template>
-      </Column>
-      <Column
+        :header="'Cert'"
+        :field="'cert_status'"
+        :statuses="statuses"
+      />
+      <TeacherColumn
         v-if="is_admin"
-        header="MS"
-        field="ms_status"
-        sortable
-      >
-        <template #body="slotProps">
-          <Tag
-            :value="statuses[slotProps.data.ms_status].label"
-            :severity="statuses[slotProps.data.ms_status].severity"
-            :icon="statuses[slotProps.data.ms_status].icon"
-            v-if="statuses[slotProps.data.ms_status].hidden != 'true'"
-            class="m-1"
-          />
-        </template>
-        <template #filter="{ filterModel, filterCallback }">
-          <MultiSelect
-            v-model="filterModel.value"
-            @change="filterCallback()"
-            :options="statuses"
-            optionLabel="label"
-            optionValue="id"
-            placeholder="Any"
-            class="p-column-filter"
-            :maxSelectedLabels="2"
-          >
-          </MultiSelect>
-        </template>
-      </Column>
+        :header="'MS'"
+        :field="'ms_status'"
+        :statuses="statuses"
+      />
       <Column
         field="grade_level"
         header="Grade Level"

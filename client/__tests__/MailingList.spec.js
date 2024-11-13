@@ -5,7 +5,7 @@ import { mount } from '@vue/test-utils';
 import MailingView from '../src/views/MailingView.vue';
 import { useUsersStore } from '../src/stores/Users.js';
 import { useRolesStore } from '../src/stores/Roles.js';
-import { useEmailsStore } from '../src/stores/Emails.js';
+import { useTeachersStore } from '../src/stores/Teachers.js';
 import PrimeVue from 'primevue/config'
 import Panel from 'primevue/panel'
 import Button from 'primevue/button'
@@ -15,7 +15,7 @@ import InputText from 'primevue/inputtext'
 
 vi.mock('../src/stores/Users')
 vi.mock('../src/stores/Roles')
-vi.mock('../src/stores/Emails')
+vi.mock('../src/stores/Teachers')
 
 global.URL.createObjectURL = vi.fn()
 
@@ -23,7 +23,7 @@ describe('Mailing List', () => {
     let wrapper;
     let usersStore;
     let rolesStore;
-    let emailsStore;
+    let teachersStore;
 
     beforeEach(async () => {
         setActivePinia(createPinia())
@@ -38,59 +38,55 @@ describe('Mailing List', () => {
             hydrate: vi.fn(),
         }
 
-        emailsStore = {
+        teachersStore = {
             hydrate: vi.fn(),
+            teachers: [  
+                { name: 'Russell Westbrook', email: 'russell@example.com' },
+                { name: 'John Doe', email: 'john@example.com' },
+                { name: 'Jane Smith', email: 'jane@example.com' }
+            ]
         }
 
         useUsersStore.mockReturnValue(usersStore);
         useRolesStore.mockReturnValue(rolesStore);
-        useEmailsStore.mockReturnValue(emailsStore);
+        useTeachersStore.mockReturnValue(teachersStore);
 
-        wrapper = mount(MailingView, {
-            global: {
-                plugins: [PrimeVue]
-            }
-        })
+        wrapper = mount(MailingView)
         await wrapper.vm.$nextTick()
     })
 
-    it('renders correctly', () => {
+    it('renders correctly', async () => {
         expect(wrapper.exists()).toBe(true)
         console.log(wrapper.html())
-        const textFields = wrapper.findAllComponents(TextField);
-  expect(textFields.length).toBe(3);  // Ensure there are 3 TextField components
+        const textFields = wrapper.findAllComponents(TextField)
+        await wrapper.vm.$nextTick()
+        expect(textFields.length).toBe(3)
+        expect(textFields[0].props('label')).toBe("Recipients")
+        expect(textFields[1].props('label')).toBe("Subject")
+        expect(textFields[2].props('label')).toBe("Text")
+        expect(textFields[0].props().icon).toBe('pi pi-envelope')
+        expect(textFields[1].props().icon).toBe("pi pi-bookmark")
+        expect(textFields[2].props().icon).toBe('pi pi-align-left')
+        const buttons = wrapper.findAllComponents(Button)
+        expect(buttons.length).toBe(1)
+        expect(buttons[0].props('label')).toBe("Send")
+        expect(buttons[0].props().icon).toBe('pi pi-check')
+    })
 
-  // Find the first TextField component and check if it contains InputText
-  const inputTextWrapper = textFields[0].findComponent(InputText);
-  expect(inputTextWrapper.exists()).toBe(true);  // Assert that the InputText component exists
+    it('calls hydrate on mount', () => {
+        expect(teachersStore.hydrate).toHaveBeenCalled()
+    })
 
-  // Now find the actual <input> element inside InputText
-  const inputElement = inputTextWrapper.find('input');
-  expect(inputElement.exists()).toBe(true);  // Assert that the <input> element is rendered
-
-  // Check the placeholder attribute
-  const placeholder = inputElement.attributes('placeholder');
-  console.log("Found placeholder:", placeholder);  // Log the placeholder value for debugging
-  expect(placeholder).toBe('Recipients');  // Assert that the placeholder is 'Recipients'
-
-  // Check the icon prop for the first TextField component
-  expect(textFields[0].props().icon).toBe('pi pi-envelope');
+    it('calls filterTeachers method', async () => {
+        const spy = vi.spyOn(wrapper.vm, 'filterTeachers');
+        wrapper.vm.searchTerm = 'russell'
+        await wrapper.vm.filterTeachers()
+        expect(spy).toHaveBeenCalledWith()
+        expect(wrapper.vm.filteredTeachers).toStrictEqual(teachersStore.teachers.filter(teacher =>
+            teacher.name.toLowerCase().includes('russell') ||
+            teacher.email.toLowerCase().includes('russell')))
     })
 /*
-    it('calls hydrate on mount', () => {
-        expect(usersStore.hydrate).toHaveBeenCalled();
-        expect(rolesStore.hydrate).toHaveBeenCalled();
-    })
-
-    it('calls editUser method', async () => {
-        const user = { id: 1, name: 'Test User' }
-        const spy = vi.spyOn(wrapper.vm, 'editUser');
-        await wrapper.vm.editUser(user);
-        expect(spy).toHaveBeenCalledWith(user);
-        expect(wrapper.vm.userDialogHeader).toBe('Edit User');
-        expect(wrapper.vm.userDialog).toBe(true);
-    })
-
     it('calls newUser method', async () => {
         const spy = vi.spyOn(wrapper.vm, 'newUser');
         await wrapper.vm.newUser();

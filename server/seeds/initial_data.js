@@ -7,16 +7,18 @@ export async function seed (knex) {
   var then = new Date(now)
   then.setMinutes(then.getMinutes() - 5)
 
-  //#region INITIALIZE DATA -- FIELDS CREATION
-  //#region Districts
-  //#endregion { id: 1, usd: '}
-  //#endregion
-
-
   //#region ADD TESTING DATA -- FIELDS CREATION
-  const numUsers = 20      // MAX --> 200
-  const numDistricts = 400   // MAX --> 
+  const numUsers = 5        // Recommended: ~5
+  const numDistricts = 100  // Recommended: ~100 
+  const numTeachers = 150   // Recommended: ~150
+  const numCourses = 15     // Recommended: ~15
+  const numCohorts = 5      // Recommended: ~5
+  const showPercentage = true
+  const showData = false
+  
+
   console.log("Seeding... ")
+
   //#region Users
   const initialUsers = [
     { id: 1, eid: "test-admin", name: 'Test Administrator', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
@@ -26,6 +28,7 @@ export async function seed (knex) {
     { id: 5, eid: "nhbean", name: 'Nathan Bean', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
   ]
   const firstUsersLength = initialUsers.length+1
+
   const fakeFN = [
     "James", "Mary", "Michael", "Patricia", "Robert", "Jennifer", "John", "Linda", "David", "Elizabeth", "William", "Barbara", 
     "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen", "Christopher", "Nancy", "Daniel", "Lisa", 
@@ -65,9 +68,7 @@ export async function seed (knex) {
   ]
 
   function getName(index) {
-    const fN = fakeFN[index] 
-    const lN = fakeLN[index]
-    return [fN, lN]
+    return [fakeFN[index], fakeLN[index]]
   }
 
   for (let i=0; i < Math.min(numUsers, fakeFN.length, fakeLN.length); i++) {
@@ -80,12 +81,18 @@ export async function seed (knex) {
       created_at: now, updated_at: now, 
       created_by: 'test-admin', updated_by: 'test-admin' })
   }
+
+  if (showData) console.log("Users: ", initialUsers);
+  if (showPercentage) console.log("10%");
   //#endregion
   //#region Roles
   const initialRoles = [
     { id: 1, name: 'admin', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' },
     { id: 2, name: 'user', created_at: now, updated_at: now, created_by: 'test-admin', updated_by: 'test-admin' }
   ]
+
+  if (showData) console.log("Roles: ", initialRoles);
+  if (showPercentage) console.log("20%");
   //#endregion
   //#region User Roles
   const initialUserRoles = [
@@ -98,15 +105,18 @@ export async function seed (knex) {
 
   for (let i=0; i < Math.min(numUsers, fakeFN.length, fakeLN.length); i++) {
     const num = i+firstUsersLength
-    const local_user_id = num.toString();
+    const local_user_id = num;
     initialUserRoles.push(
     { 
       user_id: local_user_id, 
-      role_id: '2', 
+      role_id: 2, 
       created_at: now, updated_at: now, 
       created_by: 'test-admin', updated_by: 'test-admin' 
     })
   }
+
+  if (showData) console.log("User Roles: ", initialUserRoles);
+  if (showPercentage) console.log("30%");
   //#endregion
   //#region Districts
   
@@ -414,6 +424,7 @@ export async function seed (knex) {
     }
     else {
       initialDistricts.push({
+        id: i+1,
         usd: local_usd,
         name: local_name,
         url: local_url,
@@ -426,291 +437,169 @@ export async function seed (knex) {
       })
     }
   }
+
+  if (showData) console.log("Districts: ", initialDistricts);
+  if (showPercentage) console.log("40%");
   //#endregion
   //#region Teachers
+  const initialTeachers = [];
+  const maxTeachers = Math.min(numTeachers, fakeFN.length, fakeLN.length);
 
+  for (let i = 0; i < maxTeachers; i++) {
+    const local_name = getName(i);
+    const local_email = `${local_name[0].toLowerCase()}${local_name[1].toLowerCase()}${i}@ksu.edu`; 
+    const local_eid = `${local_name[1]}-${i}`;
+    const local_status = 0;
+    const local_pd_status = 0;
+    const local_cert_status = 0;
+    const local_ms_status = 0;
+    const local_grade_level = "Freshman";
+    const local_num_students = 5;
+    
+    initialTeachers.push({
+      id: i+1,
+      name: `${local_name[0]} ${local_name[1]}`,
+      email: local_email,
+      eid: local_eid,
+      wid: i.toString(),
+      status: local_status,
+      pd_status: local_pd_status,
+      cert_status: local_cert_status,
+      ms_status: local_ms_status,
+      grade_level: local_grade_level,
+      num_students: local_num_students,
+    });
+  
+  }
+
+  if (showData) console.log("Teachers: ", initialTeachers);
+  if (showPercentage) console.log("50%");
   //#endregion
   //#region Teacher Districts
+  const initialTeacherDistricts = [];
 
+  for (let i=0; i < numTeachers; i++) { 
+    const local_teacher_id = i+1;
+    const local_district_id = (i % numDistricts) + 1;
+    const local_notes = `Teacher ${i} in District ${i}`;
+    initialTeacherDistricts.push({
+      teacher_id: local_teacher_id,
+      district_id: local_district_id,
+      notes: local_notes,
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    });
+  }
+
+  if (showData) console.log("Teacher Districts: ", initialTeacherDistricts);
+  if (showPercentage) console.log("60%");
   //#endregion
   //#region Cohorts
+  const initialCohorts = [];
+  let j = 0;
+  for (let i = 0; i < numCohorts; i++) {
+    const local_name = `Cohort ${i}`;
+    const local_notes = `Cohort ${i} notes`;
+    initialCohorts.push({
+      id: i+1,
+      name: local_name,
+      notes: local_notes,
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    });
+    j++
+  }
 
+  if (showData) console.log("Cohorts: ", initialCohorts);
+  if (showPercentage) console.log("70%");
   //#endregion
   //#region Courses
+  const initialCourses = [];
 
+  for (let i = 0; i < numCourses; i++) {
+    const local_name = `Course ${i}`;
+    const local_notes = `Course ${i} notes`;
+    initialCourses.push({
+      id: i+1,
+      name: local_name,
+      notes: local_notes,
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    });
+  }
+
+  if (showData) console.log("Courses: ", initialCourses);
+  if (showPercentage) console.log("80%");
   //#endregion
   //#region Teacher Cohorts
+  const initialTeacherCohorts = [];
 
+  for (let i=0; i < numTeachers; i++) {
+    const local_cohort_id = (i % numCohorts) + 1;
+    const local_notes = `Teacher ${i} in Cohort ${i}`;
+    initialTeacherCohorts.push({
+      teacher_id: i+1,
+      cohort_id: local_cohort_id,
+      notes: local_notes,
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    });
+  }
+
+  if (showData) console.log("Teacher Cohorts: ", initialTeacherCohorts);
+  if (showPercentage) console.log("90%");
   //#endregion 
   //#region Teacher Courses
+  const initialTeacherCourses = [];
 
-  //#endregion
-  //#region User Teachers
+  for (let i=0; i < numTeachers; i++) {
+    const local_course_id = (i % numCourses) + 1;
+    const local_notes = `Teacher ${i} in Course ${i}`;
+    initialTeacherCourses.push({
+      teacher_id: i+1,
+      course_id: local_course_id,
+      notes: local_notes,
+      created_at: now,
+      updated_at: now,
+      created_by: 'test-admin',
+      updated_by: 'test-admin',
+    });
+  }
 
+  if (showData) console.log("Teacher Courses: ", initialTeacherCourses);
+  if (showPercentage) console.log("100%");
+  //#endregion
   //#endregion
 
-  
-  //#endregion
-  //#endregion
-
-  // Users
+  // Delete existing data
   await knex('users').del()
-  await knex('users').insert(initialUsers)
-  // Roles
   await knex('roles').del()
-  await knex('roles').insert(initialRoles)
-  // User Roles
   await knex('user_roles').del()
-  await knex('user_roles').insert(initialUserRoles)
-  // Districts
   await knex('districts').del()
-  var result = await knex('districts').insert(initialDistricts)
-  console.log(result)
-  //#region OG District Data  
-  /*[
-    {
-      id: 1,
-      usd: '380',
-      name: 'Vermillion',
-      url: 'https://www.usd380.com/',
-      locale: 43,
-      notes: 'Vermillion notes',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      id: 2,
-      usd: '501',
-      name: 'Topeka',
-      url: 'https://www.topekapublicschools.net/',
-      locale: 12,
-      notes: 'Topeka notes',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      id: 3,
-      usd: '233',
-      name: 'Olathe',
-      url: 'https://www.olatheschools.org/',
-      locale: 21,
-      notes: 'Olathe notes',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      id: 4,
-      usd: '259',
-      name: 'Wichita',
-      url: 'https://www.usd259.org/',
-      locale: 11,
-      notes: 'Wichita notes',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-  ])*/
- //#endregion
-
-  // Teachers
   await knex('teachers').del()
-  await knex('teachers').insert([
-    {
-      id: 1,
-      name: 'Russell Feldhausen',
-      email: 'russfeld_2166@yahoo.com',
-      eid: 'russfeld',
-      wid: '835203884',
-      status: 1,
-      pd_status: 1,
-      cert_status: 1,
-      ms_status: 1,
-      grade_level: 'high school 9-12',
-      notes: 'Russell notes',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      id: 2,
-      name: 'Joshua Weese',
-      email: 'weeser@ksu.edu',
-      eid: 'weeser',
-      wid: '123456789',
-      status: 0,
-      pd_status: 0,
-      cert_status: 0,
-      ms_status: 0,
-      grade_level: 'middle school 6-8',
-      notes: 'Joshua notes',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      id: 3,
-      name: 'Nathan Bean',
-      email: 'nhbean@k-state.edu',
-      eid: 'nhbean',
-      wid: '987654321',
-      status: 1,
-      pd_status: 1,
-      cert_status: 1,
-      ms_status: 1,
-      grade_level: 'elementary school K-5',
-      notes: 'Update grade level',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-  ])
-
-  // Teacher Districts
   await knex('teacher_districts').del()
-  await knex('teacher_districts').insert([
-    {
-      teacher_id: '1',
-      district_id: '2',
-      notes: 'Teacher 1 in District 2',
-      primary: false,
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      teacher_id: '2',
-      district_id: '1',
-      notes: 'Teacher 2 in District 1',
-      primary: true,
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      teacher_id: '1',
-      district_id: '1',
-      notes: 'Teacher 1 in District 1',
-      primary: true,
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      teacher_id: '3',
-      district_id: '3',
-      notes: 'Teacher 3 in District 3',
-      primary: true,
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    }
-  ])
-
-  // Cohocrts
   await knex('cohorts').del()
-  await knex('cohorts').insert([
-    {
-      id: 1,
-      name: 'Spring 2023',
-      notes: 'PACK grant funded cohort',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      id: 2,
-      name: 'Fall 2024',
-      notes: 'Fall 2024 Test Cohort',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      id: 3,
-      name: 'Spring 2025',
-      notes: 'Spring 2025 Test Cohort',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin'
-    }
-  ])
-
-  // Teacher Cohorts
   await knex('teacher_cohorts').del()
-  await knex('teacher_cohorts').insert([
-    {
-      teacher_id: '1',
-      cohort_id: '1',
-      notes: 'Teacher 1 in Cohort 1',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      teacher_id: '2',
-      cohort_id: '1',
-      notes: 'Teacher 2 in Cohort 1',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-  ])
-
-  // Courses
   await knex('courses').del()
-  await knex('courses').insert([
-    {
-      id: 1,
-      name: 'CC 710 S23',
-      notes: 'First offering under new CC 710 heading',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-  ])
-
-  // Teacher Courses
   await knex('teacher_courses').del()
-  await knex('teacher_courses').insert([
-    {
-      teacher_id: '1',
-      course_id: '1',
-      status: '1',
-      notes: 'Teacher 1 in Course 1',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-    {
-      teacher_id: '2',
-      course_id: '1',
-      status: '2',
-      notes: 'Teacher 2 in Course 1',
-      created_at: now,
-      updated_at: now,
-      created_by: 'test-admin',
-      updated_by: 'test-admin',
-    },
-  ])
+
+  // Insert initial data
+  await knex('users').insert(initialUsers)
+  await knex('roles').insert(initialRoles)
+  await knex('user_roles').insert(initialUserRoles)
+  await knex('districts').insert(initialDistricts)
+  await knex('teachers').insert(initialTeachers)
+  await knex('teacher_districts').insert(initialTeacherDistricts)
+  await knex('cohorts').insert(initialCohorts)
+  await knex('teacher_cohorts').insert(initialTeacherCohorts)
+  await knex('courses').insert(initialCourses)
+  await knex('teacher_courses').insert(initialTeacherCourses)
 }

@@ -85,7 +85,7 @@ export function up(knex) {
           table.integer('pd_status').defaultTo(0)
           table.integer('cert_status').defaultTo(0)
           table.integer('ms_status').defaultTo(0)
-          table.string('grade_level')
+          table.string('grade_level', 255)
           table.integer('num_students').defaultTo(0)
           table.text('notes').nullable()
           table.timestamps()

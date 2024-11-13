@@ -8,13 +8,24 @@ export async function seed (knex) {
   then.setMinutes(then.getMinutes() - 5)
 
   //#region ADD TESTING DATA -- FIELDS CREATION
-  const numUsers = 5        // Recommended: ~5
-  const numDistricts = 100  // Recommended: ~100 
-  const numTeachers = 150   // Recommended: ~150
-  const numCourses = 15     // Recommended: ~15
-  const numCohorts = 5      // Recommended: ~5
-  const showPercentage = true
-  const showData = false
+  const useRecommended = true
+
+  var numUsers = 5
+  var numDistricts = 286      
+  var numTeachers = 150      
+  var numCourses = 15             
+  var numCohorts = 5              
+  const showPercentage = false
+  const showData = true
+
+  if (useRecommended) {
+    numUsers = 5; numDistricts = 100; numTeachers = 150; numCourses = 15; numCohorts = 5;
+  }
+
+  //#region Set Maxes
+  if (numCourses > 50) numCourses = 50;
+  if (numCohorts > 50) numCohorts = 50;
+  //#endregion
   
 
   console.log("Seeding... ")
@@ -480,7 +491,7 @@ export async function seed (knex) {
 
   for (let i=0; i < numTeachers; i++) { 
     const local_teacher_id = i+1;
-    const local_district_id = (i % numDistricts) + 1;
+    const local_district_id = (i % Math.min(numDistricts, allDistricts.length)) + 1;
     const local_notes = `Teacher ${i} in District ${i}`;
     initialTeacherDistricts.push({
       teacher_id: local_teacher_id,
@@ -518,6 +529,16 @@ export async function seed (knex) {
   if (showPercentage) console.log("70%");
   //#endregion
   //#region Courses
+  const allCourses = [
+    { name: 'CC 710', notes: 'Introduction to Computing for Educators' },
+    { name: 'CC 711', notes: 'Computer Education Programming Fundamentals' },
+    { name: 'CC 730', notes: 'Computer Programming Fundamentals' },
+    { name: 'CC 750', notes: 'Data Structures and Algorithms for Educators I' },
+    { name: 'CC 755', notes: 'Data Structures and Algorithms for Educators II' },
+    { name: 'CC 760', notes: 'Advanced Computing for Educators' },
+    { name: 'CC 798', notes: 'Topics in Computing for Educators' }
+  ]
+
   const initialCourses = [];
 
   for (let i = 0; i < numCourses; i++) {

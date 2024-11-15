@@ -41,7 +41,7 @@ describe('Mailing List', () => {
         teachersStore = {
             hydrate: vi.fn(),
             teachers: [  
-                { name: 'Russell Westbrook', email: 'russell@example.com' },
+                { name: 'Russell Feldhausen', email: 'russell@example.com' },
                 { name: 'John Doe', email: 'john@example.com' },
                 { name: 'Jane Smith', email: 'jane@example.com' }
             ]
@@ -78,7 +78,7 @@ describe('Mailing List', () => {
     })
 
     it('calls filterTeachers method', async () => {
-        const spy = vi.spyOn(wrapper.vm, 'filterTeachers');
+        const spy = vi.spyOn(wrapper.vm, 'filterTeachers')
         wrapper.vm.searchTerm = 'russell'
         await wrapper.vm.filterTeachers()
         expect(spy).toHaveBeenCalledWith()
@@ -86,56 +86,60 @@ describe('Mailing List', () => {
             teacher.name.toLowerCase().includes('russell') ||
             teacher.email.toLowerCase().includes('russell')))
     })
-/*
-    it('calls newUser method', async () => {
-        const spy = vi.spyOn(wrapper.vm, 'newUser');
-        await wrapper.vm.newUser();
-        expect(spy).toHaveBeenCalled();
-        expect(wrapper.vm.user).toEqual({ eid: '', name: '', roles: []});
-        expect(wrapper.vm.editEid).toBe(true);
-        expect(wrapper.vm.userDialogHeader).toBe('New User');
-        expect(wrapper.vm.userDialog).toBe(true);
+
+    it('calls showRecipientDialog', async () => {
+        const spy = vi.spyOn(wrapper.vm, 'showRecipientDialog')
+        await wrapper.vm.showRecipientDialog()
+        expect(spy).toHaveBeenCalledWith()
+        expect(wrapper.vm.recipientDialog).toBe(true)
     })
 
-    it('calls deleteUser method', async () => {
-        const user = { id: 1, name: 'Test User' }
-        const spy = vi.spyOn(wrapper.vm, 'deleteUser');
-        const confirmSpy = vi.spyOn(wrapper.vm.$confirm, 'require');
-        await wrapper.vm.deleteUser(user);
-
-        expect(spy).toHaveBeenCalledWith(user);
-        expect(confirmSpy).toHaveBeenCalledWith({
-            message: 'Are you sure you want to delete Test User?',
-            header: 'Danger Zone',
-            icon: 'pi pi-exclamation-triangle',
-            rejectLabel: 'Cancel',
-            acceptLabel: 'Delete',
-            rejectClass: 'p-button-secondary p-button-outlined',
-            acceptClass: 'p-button-danger',
-            accept: expect.any(Function),
-            reject: expect.any(Function)
-        })
+    it('calls selectRecipient method', async () => {
+        const spy = vi.spyOn(wrapper.vm, 'selectRecipient')
+        const teacher = {
+            name: "Russell Feldhausen",
+            email: "russell@gmail.com"
+        }
+        await wrapper.vm.selectRecipient(teacher)
+        expect(spy).toHaveBeenCalled(teacher)
+        expect(wrapper.vm.recipent).toContain("russell@gmail.com")
+        expect(wrapper.vm.recipientDisplay).toBe("russell@gmail.com")
+        
     })
 
-    it('calls save method', async () => {
-        const user = { id: 1, name: 'Test User' }
-        wrapper.vm.user = user;
-        const spy = vi.spyOn(wrapper.vm, 'save');
-        await wrapper.vm.save();
+    it('calls removeRecipient method', async () => {
+        const user = { name: 'Test User', email: "test@gmail.com" }
+        const spy = vi.spyOn(wrapper.vm, 'removeRecipient');
+        await wrapper.vm.selectRecipient(user)
+        await wrapper.vm.removeRecipient(user)
+        expect(spy).toHaveBeenCalled(user)
+        expect(wrapper.vm.recipient).not.toContain("test@gmail.com")
+        expect(wrapper.vm.recipientDisplay).toBe('')
+    })
+
+    it('calls focusCloseButton method', async () => {
+        const spy = vi.spyOn(wrapper.vm, 'focusCloseButton');
+        await wrapper.vm.focusCloseButton();
         expect(spy).toHaveBeenCalled();
     })
 
-    it('calls exportCSV method', async () => {
-        const spy = vi.spyOn(wrapper.vm, 'exportCSV');
-        await wrapper.vm.exportCSV();
-        expect(spy).toHaveBeenCalled();
+    it('calls sendEmail method', async () => {
+        const recipient = { name: 'Test User', email: "test@gmail.com" }
+        const sender = { name: 'Test sender', email: "sender@gmail.com" }
+        const spy = vi.spyOn(wrapper.vm, 'sendEmail')
+        await wrapper.vm.sendEmail()
+        expect(spy).toHaveBeenCalled()
+        expect(wrapper.vm.message).toBe('At least one recipient is required')
+        wrapper.vm.subject = 'test subject'
+        wrapper.vm.text = 'test text'
+        await wrapper.vm.sendEmail()
+        expect(spy).toHaveBeenCalled()
+        expect(wrapper.vm.recipient.length).toBe(0)
+        expect(wrapper.vm.recipientDisplay).toBe('')
+        expect(wrapper.vm.subject).toBe('')
+        expect(wrapper.vm.text).toBe('')
+        expect(wrapper.vm.message).toBe('Email sent successfully')
     })
-
-    it('calls exportFunction method', async () => {
-        const row = { data: [{name: 'Admin'}]};
-        const result = wrapper.vm.exportFunction(row);
-        expect(result).toBe('"Admin,"');
-    })
-    */
+    
 
 });

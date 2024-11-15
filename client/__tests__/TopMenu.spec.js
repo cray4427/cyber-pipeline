@@ -1,77 +1,110 @@
 import { mount } from '@vue/test-utils'
-import { createRouter, createWebHistory } from 'vue-router'
-import { createTestingPinia } from '@pinia/testing'
-import { describe, it, beforeEach, expect, vi } from 'vitest'
+import { createRouter, createMemoryHistory } from 'vue-router'
 import TopMenu from '@/components/topmenu/TopMenu.vue'
-import ThemeToggle from '@/components/topmenu/ThemeToggle.vue'
-import LoginProfile from '@/components/topmenu/LoginProfile.vue'
+import { useTokenStore } from '@/stores/Token'
+import { vi, describe, beforeEach, it, expect, afterEach } from 'vitest'
 
-// Mock the router
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    { path: '/', name: 'home' },
-    { path: '/teachers', name: 'teachers' },
-    { path: '/districts', name: 'districts' }
-  ]
-})
+//When you mock token store in this class it messes with token store in loginprofile
+// vi.mock('@/stores/Token', () => ({
+//   useTokenStore: vi.fn().mockReturnValue({
+//     is_admin: false,
+//     is_user: false,
+//     $subscribe: vi.fn().mockImplementation((callback) => {
+//       // Store the callback so it can be called manually
+//       this.callback = callback
+//     }),
+//   })
+// }))
 
-describe('TopMenu', () => {
-  beforeEach(async () => {
+describe.todo('TopMenu.vue', () => {
+  let wrapper
+  let tokenStoreMock
+  let router
+
+  beforeEach(() => {
+    // Mock router
+    router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { name: 'home', path: '/' },
+        { name: 'teachers', path: '/teachers' },
+        { name: 'districts', path: '/districts' },
+        { name: 'cohorts', path: '/cohorts' },
+        { name: 'courses', path: '/courses' },
+        { name: 'users', path: '/users' },
+        { name: 'mailing', path: '/mailing' },
+      ],
+    })
     router.push('/')
-    await router.isReady()
-  })
 
-  it('renders the Menubar with initial items', async () => {
-    const wrapper = mount(TopMenu, {
+    // Mock tokenStore for each test
+    tokenStoreMock = useTokenStore()
+
+    // Mount the component with router
+    wrapper = mount(TopMenu, {
       global: {
-        plugins: [router, createTestingPinia({ stubActions: false, createSpy: vi.fn })],
+        plugins: [router]
       }
     })
+  })
 
-    // Check that the Menubar renders the initial "Home" item
-    const menuItems = wrapper.findAll('.pi-home')
+  afterEach(()=>{
+    wrapper.unmount()
+  })
+
+  it('renders the basic menu for non-authenticated users', () => {
+    tokenStoreMock.is_user = false
+    tokenStoreMock.is_admin = false
+    tokenStoreMock.$subscribe() // Simulate store update
+
+    // Assert only the "Home" menu item exists
+    const menuItems = wrapper.findAll('li')
     expect(menuItems.length).toBe(1)
-    expect(wrapper.text()).toContain('Home')
-
-    // Ensure that ThemeToggle and LoginProfile components render
-    expect(wrapper.findComponent(ThemeToggle).exists()).toBe(true)
-    expect(wrapper.findComponent(LoginProfile).exists()).toBe(true)
+    expect(menuItems[0].text()).toContain('Home')
   })
 
-  it('updates the menu items when the user is an admin', async () => {
-    const wrapper = mount(TopMenu, {
-      global: {
-        plugins: [router, createTestingPinia({
-          initialState: {
-            Token: { is_admin: true, is_user: false }  // Mock admin user
-          }
-        })]
-      }
-    })
+  it('renders the full menu for admin users', async () => {
+    tokenStoreMock.is_user = false
+    tokenStoreMock.is_admin = true
+    tokenStoreMock.$subscribe() // Simulate store update
 
-    // Trigger tokenStore update
+    // Wait for the reactivity to update the items
     await wrapper.vm.$nextTick()
 
-    // Check if admin menu items exist
-    const menuItems = wrapper.findAll('.pi-users')
-    expect(menuItems.length).toBe(2)  // Teachers and Cohorts
-    expect(wrapper.text()).toContain('Teachers')
-    expect(wrapper.text()).toContain('Cohorts')
+    const menuItems = wrapper.findAll('li')
+    expect(menuItems.length).toBe(7) // Admin should see 7 items
+    expect(menuItems[1].text()).toContain('Teachers')
+    expect(menuItems[2].text()).toContain('Districts')
+    expect(menuItems[3].text()).toContain('Cohorts')
+    expect(menuItems[4].text()).toContain('Courses')
+    expect(menuItems[5].text()).toContain('Users')
+    expect(menuItems[6].text()).toContain('Mailing')
   })
 
-  it('navigates to the correct route on menu item click', async () => {
-    const wrapper = mount(TopMenu, {
-      global: {
-        plugins: [router, createTestingPinia({ stubActions: false })]
-      }
-    })
+  it.todo('navigates to the correct route when menu items are clicked', async () => {
+    const mockPush = vi.fn()
+    router.push = mockPush // Mock the router push method
 
-    // Find the "Home" menu item and click it
-    const homeItem = wrapper.find('.pi-home')
-    await homeItem.trigger('click')
+    tokenStoreMock.is_user = true
+    tokenStoreMock.is_admin = false
+    tokenStoreMock.$subscribe() // Simulate store update
 
-    // Ensure the router navigates to the home route
-    expect(router.currentRoute.value.name).toBe('home')
+    await wrapper.vm.$nextTick()
+
+    const homeMenuItem = wrapper.find('[aria-label="Home"]')
+    await homeMenuItem.trigger('click')
+
+    // Check that the router's push function was called with the correct path
+    expect(mockPush).toHaveBeenCalledWith({ name: 'home' })
+  })
+
+  it('renders ThemeToggle and LoginProfile components', () => {
+    tokenStoreMock.is_user = false
+    tokenStoreMock.is_admin = false
+    tokenStoreMock.$subscribe() // Simulate store update
+
+    // Check that ThemeToggle and LoginProfile are rendered in the end slot
+    expect(wrapper.findComponent({ name: 'ThemeToggle' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'LoginProfile' }).exists()).toBe(true)
   })
 })

@@ -311,11 +311,13 @@ const exportFunction = (row) => {
         field="eid"
         sortable
         header="eID"
+        v-if="is_admin"
       ></Column>
       <Column
         field="wid"
         sortable
         header="WID"
+        v-if="is_admin"
       ></Column>
       <Column
         v-if="is_admin"

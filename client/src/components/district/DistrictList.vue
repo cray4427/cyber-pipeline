@@ -292,7 +292,7 @@ const exportFunction = (row) => {
           <a :href="slotProps.data.url">{{ slotProps.data.url }}</a>
         </template>
       </Column>
-      <!--
+      
       <Column
         field="teachers"
         header="Teachers"
@@ -307,7 +307,7 @@ const exportFunction = (row) => {
           />
         </template>
       </Column>
-      -->
+      
       <Column
         header="Locale"
         field="locale"

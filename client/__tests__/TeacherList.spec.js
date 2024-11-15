@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { describe, it, beforeEach, expect, vi, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import TeacherList from '../src/components/teacher/TeacherList.vue';
 import { useTokenStore } from '../src/stores/Token.js';
@@ -64,11 +64,11 @@ describe('TeacherList', () => {
         useCohortsStore.mockReturnValue(cohortsStore);
         useCoursesStore.mockReturnValue(coursesStore);
 
-        wrapper = mount(TeacherList, {
-            global: {
-                plugins: [PrimeVue]
-            }
-        })
+        wrapper = mount(TeacherList)
+    })
+
+    afterEach(() => {
+        wrapper.unmount();
     })
 
     it('renders correctly', () => {

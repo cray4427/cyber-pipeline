@@ -82,6 +82,13 @@ tokenStore.$subscribe(() => {
         command: () => {
           router.push({ name: 'mailing'})
         }
+      },
+      {
+        label: 'Analytics',
+        icon: 'pi pi-sliders-h',
+        command: () => {
+          router.push({ name: 'analytics' })  
+        }
       }
     ]
   } else if (tokenStore.is_user) {

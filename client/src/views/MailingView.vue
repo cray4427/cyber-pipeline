@@ -1,6 +1,6 @@
 <template>
   <div class="mailing-view">
-    <h1 id="main-heading">Send Email</h1>
+    <h1>Send Email</h1>
     <form @submit.prevent="sendEmail">
       <TextField
         label="Recipients"
@@ -130,6 +130,8 @@ import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import Message from 'primevue/message'
 import TextField from '@/components/forms/TextField.vue'
+//import TextAreaField from '@/components/forms/TextAreaField'
+
 
 const emailStore = useEmailsStore()
 const teachersStore = useTeachersStore()
